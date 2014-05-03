@@ -8,6 +8,14 @@ Installation
 To ensure that all plugins work you need to have vim with:
   +ruby +python +X11
 
+Also some external tools:
+
+  * rubocop - for code quality
+  * zeal - for code documentation
+  * ctags
+  * ripper-tags - for propper ctags generation
+  * powerline-fonts - for better airline
+
 To install, run
 
     $ git clone git://github.com/gacha/vim-config.git ~/.vim

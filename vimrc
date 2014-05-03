@@ -12,6 +12,7 @@ Plugin 'tpope/vim-endwise'
 Plugin 'morhetz/gruvbox'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-rails'
@@ -31,16 +32,11 @@ Plugin 'alpaca-tc/beautify.vim'
 call vundle#end()
 filetype plugin indent on
 "-----------------------
-set shell=/bin/zsh
-set encoding=utf-8
-set termencoding=utf-8
 """""""""""""""""""""""""
 " KEYBINDINGS
 """""""""""""""""""""""""
 let mapleader=","
 let localmapleader=","
-map <Leader>ss :setlocal spell!<cr>
-map <Leader>/ :nohlsearch<cr>
 map <Leader>w :w<CR>
 map <Leader>q :wqa<CR>
 map <Leader>[ :tabprevious<cr>
@@ -99,6 +95,17 @@ map <Leader>n :call NumberToggle()<CR>
 " Basic features
 """""""""""""""""""""""""
 
+" Misc
+set shell=/bin/zsh
+set encoding=utf-8
+set termencoding=utf-8
+set clipboard+=unnamed
+filetype plugin indent on " Do filetype detection and load custom file plugins and indent files
+set laststatus=2          " When you go into insert mode,
+                          " the status line color changes. 
+                          " When you leave insert mode, 
+                          " the status line color changes back.
+
 " Display options
 syntax on
 set pastetoggle=<F12>
@@ -108,7 +115,6 @@ set list!                       " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
 set t_Co=256
 set term=xterm-256color
-" available themes: molokai, gruvbox
 colorscheme gruvbox
 let g:gruvbox_termcolors = 256
 let g:gruvbox_contrast = 'hard'
@@ -116,9 +122,6 @@ set bg=dark
 let g:rehash256 = 1
 set t_ut= " fixes transparent BG on tmux
 
-" Misc
-set clipboard+=unnamed
-filetype plugin indent on       " Do filetype detection and load custom file plugins and indent files
 " Always edit file, even when swap file is found
 set shortmess+=A
 set hidden                      " Don't abandon buffers moved to the background
@@ -135,6 +138,8 @@ if has("mouse_sgr")
 else
   set ttymouse=xterm2
 end
+
+" Relative line numbers
 set relativenumber
 autocmd InsertLeave * :call NumberToggle()
 autocmd InsertEnter * :call NumberToggle()
@@ -189,9 +194,6 @@ let &colorcolumn="80,".join(range(120,999),",")
 " Plugins
 """""""""""""""""""""""""
 
-" Splash screen
-let g:startify_custom_header = split(system('fortune | cowsay'), '\n') + ['','']
-
 let g:rspec_command = "!bundle exec rspec {spec}"
 runtime macros/matchit.vim
 let g:NERDTreeChDirMode       = 2
@@ -200,6 +202,10 @@ let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$', '\.so
 let NERDTreeHighlightCursorline = 1
 let NERDTreeShowBookmarks = 1
 let NERDTreeShowFiles = 1
+
+" Airline
+let g:airline_powerline_fonts = 1 " better fonts
+let g:airline#extensions#tabline#enabled = 1 " cool tabs
 
 " syntastic
 let g:syntastic_auto_loc_list=1
@@ -216,9 +222,6 @@ let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'passive_filetypes': ['html', 'c', 'scss'] }
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:quickfixsigns_classes = ['qfl', 'vcsdiff', 'breakpoints']
-
-let g:Powerline_symbols = 'unicode'
-set laststatus=2
 
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
 " ignores for ctrlp
@@ -237,13 +240,6 @@ autocmd FileType ruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby let g:rubycomplete_buffer_loading = 1
 autocmd FileType ruby let g:rubycomplete_rails = 1
 autocmd FileType ruby let g:rubycomplete_classes_in_global = 0
-
-
-" SnipMate
-let g:UltiSnips = {}
-let g:UltiSnips.snipmate_ft_filter = {
-            \ 'default' : {'filetypes': ["FILETYPE"] },
-            \ 'ruby'    : {'filetypes': ["ruby", "ruby-rails", "ruby-1.9"] },}
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
