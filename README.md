@@ -12,6 +12,7 @@ To install, run
 
     $ git clone git://github.com/gacha/vim-config.git ~/.vim
     $ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    $ mkdir ~/.vim/undo ~/.vim/swap
     $ ln -s ~/.vim/vimrc ~/.vimrc
 
 Then open vim and install plugins
