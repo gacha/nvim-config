@@ -1,8 +1,6 @@
 About
 ------------
-This is a fork from https://github.com/nviennot/vim-config with some changes to suit my needs.
-
-Watch his awesome article about vim + tmux and pry http://velvetpulse.com/2012/11/19/improve-your-ruby-workflow-by-integrating-vim-tmux-pry/ that convinced me to try vim as primary ruby editor.
+Vim config for ruby on rails developer.
 
 Installation
 ------------
