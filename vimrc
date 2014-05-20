@@ -28,6 +28,10 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
   Plugin 'edsono/vim-matchit'
 Plugin 'thinca/vim-localrc'
 Plugin 'alpaca-tc/beautify.vim'
+Plugin 'jgdavey/vim-blockle'
+Plugin 'tpope/vim-fugitive'
+Plugin 'SirVer/ultisnips'
+  Plugin 'honza/vim-snippets'
 
 call vundle#end()
 filetype plugin indent on
@@ -38,14 +42,16 @@ filetype plugin indent on
 let mapleader=","
 let localmapleader=","
 map <Leader>w :w<CR>
-map <Leader>q :wqa<CR>
-map <Leader>[ :tabprevious<cr>
-map <Leader>] :tabnext<cr>
-map <Leader>p "+p<cr>
-map <Leader>y "+y<cr>
-map <Leader>D "_dd<cr>
-map <Leader>d "_d<cr>
-map <Leader>c :TComment<cr>
+map <Leader>qa :wqa<CR>
+map <Leader>[ :tabprevious<CR>
+map <Leader>] :tabnext<CR>
+map <Leader>p "+p<CR>
+map <Leader>y "+y<CR>
+map <Leader>D "_dd<CR>
+map <Leader>d "_d<CR>
+map <Leader>c :TComment<CR>
+map <Leader>r8 :vertical resize 80<CR>
+map <Leader>r12 :vertical resize 120<CR>
 " RSpec.vim mappings
 map <Leader>T :call RunCurrentSpecFile()<CR>
 map <Leader>R :call RunNearestSpec()<CR>
@@ -224,6 +230,13 @@ let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:quickfixsigns_classes = ['qfl', 'vcsdiff', 'breakpoints']
 
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
+
+let g:UltiSnipsExpandTrigger="<tab>"
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
 " ignores for ctrlp
 set wildignore+=tags
 set wildignore+=*/tmp/*
@@ -231,6 +244,9 @@ set wildignore+=*/spec/vcr/*
 set wildignore+=*/public/*
 set wildignore+=*/coverage/*
 set wildignore+=*.png,*.jpg,*.otf,*.woff,*.jpeg,*.orig
+
+" Markdown
+let g:vim_markdown_folding_disabled=1
 
 " autocomplete
 let g:SuperTabContextDefaultCompletionType = "<c-n>"
