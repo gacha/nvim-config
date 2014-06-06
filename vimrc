@@ -4,6 +4,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+Plugin 'gmarik/Vundle.vim'
 Plugin 'smeggingsmegger/ag.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
@@ -32,6 +33,7 @@ Plugin 'jgdavey/vim-blockle'
 Plugin 'tpope/vim-fugitive'
 Plugin 'SirVer/ultisnips'
   Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-repeat'
 
 call vundle#end()
 filetype plugin indent on
