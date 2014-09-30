@@ -42,6 +42,9 @@ Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
 Plugin 'lukaszkorecki/CoffeeTags'
 Plugin 'othree/eregex.vim'
+Plugin 'wakatime/vim-wakatime'
+Plugin 'elixir-lang/vim-elixir'
+Plugin 'danchoi/ri.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -80,8 +83,13 @@ map <Leader>rt :!ripper-tags -R --exclude=vendor
 " Zeal docs
 nmap <leader>z :!zeal --query "<cword>" &> /dev/null &<CR><CR>
 
+" ri.vim ruby documentation explorer
+nnoremap  <leader>ri :call ri#OpenSearchPrompt(0)<cr> " horizontal split
+nnoremap  <leader>RI :call ri#OpenSearchPrompt(1)<cr> " vertical split
+nnoremap  <leader>RK :call ri#LookupNameUnderCursor()<cr> " keyword lookup
+
 " Rubocop fix current file
-nmap <leader>rc :!rubocop -a %<CR>
+nmap <leader>rc :!rubocop -a -n %<CR>
 
 " window
 nmap <leader>sw<left>  :topleft  vnew<CR>
@@ -223,21 +231,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 " Ctrl-P
 let g:ctrlp_working_path_mode = 'rw'
-if exists("g:ctrlp_user_command")
-  unlet g:ctrlp_user_command
-endif
-if executable('ag')
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command =
-    \ 'ag %s --files-with-matches -g "" --ignore "\.git$\|\.hg$\|\.svn$"'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-else
-  " Fall back to using git ls-files if Ag is not available
-  let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
-endif
+let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
 
 " Default to filename searches - so that appctrl will find application
 " controller
@@ -250,13 +245,14 @@ let g:ctrlp_switch_buffer = 0
 " Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
+let g:airline_section_z = ''
 
 " syntastic
 let g:syntastic_auto_loc_list=1
 let g:syntastic_enable_highlighting=0
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '⚠'
@@ -358,6 +354,9 @@ if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
+" Tags
+set tags+=,ruby.tags
+set tags+=,coffee.tags
 
 " ruby
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
