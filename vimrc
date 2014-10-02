@@ -89,7 +89,7 @@ nnoremap  <leader>RI :call ri#OpenSearchPrompt(1)<cr> " vertical split
 nnoremap  <leader>RK :call ri#LookupNameUnderCursor()<cr> " keyword lookup
 
 " Rubocop fix current file
-nmap <leader>rc :!rubocop -a -n %<CR>
+nmap <leader>rc :call Rubocop()<CR>
 
 " window
 nmap <leader>sw<left>  :topleft  vnew<CR>
@@ -398,6 +398,13 @@ function! ArrowsOn()
   map <down> <Down>
   map <left> <Left>
   map <right> <Right>
+endfun
+
+function! Rubocop()
+  exe "w"
+  silent exe "!rubocop -a % &> /dev/null"
+  silent exe "e %"
+  SyntasticCheck()
 endfun
 
 "This allows for change paste motion cp{motion}
