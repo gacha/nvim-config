@@ -5,6 +5,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
+Plugin 'takac/vim-hardtime'
 Plugin 'smeggingsmegger/ag.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
@@ -90,6 +91,9 @@ nnoremap  <leader>RK :call ri#LookupNameUnderCursor()<cr> " keyword lookup
 
 " Rubocop fix current file
 nmap <leader>rc :call Rubocop()<CR>
+
+" Hardtime
+let g:hardtime_default_on = 1
 
 " window
 nmap <leader>sw<left>  :topleft  vnew<CR>
@@ -218,7 +222,7 @@ let &colorcolumn="80,".join(range(120,999),",")
 " Plugins
 """""""""""""""""""""""""
 
-let g:rspec_command = "!bundle exec rspec {spec}"
+let g:rspec_command = "!if [ -f ./bin/rspec ]; then; bundle exec spring rspec {spec}; else; bundle exec rspec {spec}; fi;"
 runtime macros/matchit.vim
 let g:NERDTreeChDirMode       = 2
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '\.log$' ]
@@ -384,21 +388,6 @@ au BufRead,BufNewFile Bowerfile setfiletype ruby
 """""""""""""""""""""""""
 
 "Toggle arrow keys
-
-function! ArrowsOff()
-  map <up> <nop>
-  map <down> <nop>
-  map <left> <nop>
-  map <right> <nop>
-endfun
-call ArrowsOff()
-
-function! ArrowsOn()
-  map <up> <Up>
-  map <down> <Down>
-  map <left> <Left>
-  map <right> <Right>
-endfun
 
 function! Rubocop()
   exe "w"
