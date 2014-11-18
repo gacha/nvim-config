@@ -18,7 +18,6 @@ Plugin 'altercation/vim-colors-solarized'
 
 Plugin 'kris89/vim-multiple-cursors'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'scrooloose/nerdtree'
 Plugin 'bling/vim-airline'
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'tpope/vim-rails'
@@ -54,8 +53,8 @@ filetype plugin indent on
 """""""""""""""""""""""""
 " KEYBINDINGS
 """""""""""""""""""""""""
-let mapleader="\\"
-let localmapleader="\\"
+let mapleader=","
+inoremap jj <ESC>
 map <Leader>w :w<CR>
 map <Leader>qa :wqa<CR>
 map <Leader>[ :bprevious<CR>
@@ -89,6 +88,12 @@ nnoremap  <leader>ri :call ri#OpenSearchPrompt(0)<cr> " horizontal split
 nnoremap  <leader>RI :call ri#OpenSearchPrompt(1)<cr> " vertical split
 nnoremap  <leader>RK :call ri#LookupNameUnderCursor()<cr> " keyword lookup
 
+" Edit another file in the same directory as the current file
+" uses expression to extract path from current file's path
+map <Leader>e :e <C-R>=escape(expand("%:p:h"),' ') . '/'<CR>
+map <Leader>s :split <C-R>=escape(expand("%:p:h"), ' ') . '/'<CR>
+map <Leader>v :vnew <C-R>=escape(expand("%:p:h"), ' ') . '/'<CR>
+
 " Rubocop fix current file
 nmap <leader>rc :call Rubocop()<CR>
 
@@ -102,8 +107,6 @@ nmap <leader>sw<up>    :topleft  new<CR>
 command! Q q " Bind :Q to :q
 command! Qall qall
 command! W w
-map <C-g> :NERDTreeToggle<CR>
-map <C-f> :NERDTreeFind<CR>
 nnoremap <C-y> :YRShow<cr>
 let g:ctrlp_map = '<c-e>'
 nmap <F8> :TagbarToggle<CR>
@@ -224,14 +227,6 @@ let &colorcolumn="80,".join(range(120,999),",")
 
 let g:rspec_command = "!if [ -f ./bin/rspec ]; then; bundle exec spring rspec {spec}; else; bundle exec rspec {spec}; fi;"
 runtime macros/matchit.vim
-let g:NERDTreeChDirMode       = 2
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '\.log$' ]
-let NERDTreeHighlightCursorline = 1
-let NERDTreeShowFiles = 1
-let NERDTreeQuitOnOpen = 1
-let NERDTreeShowHidden = 1
-
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Ctrl-P
 let g:ctrlp_working_path_mode = 'rw'
