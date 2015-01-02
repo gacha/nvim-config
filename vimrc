@@ -33,11 +33,10 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'thinca/vim-localrc'
 Plugin 'alpaca-tc/beautify.vim'
 Plugin 'jgdavey/vim-blockle'
-Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'othree/javascript-libraries-syntax.vim'
-Plugin 'Shougo/neocomplete.vim'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
 Plugin 'lukaszkorecki/CoffeeTags'
@@ -45,6 +44,10 @@ Plugin 'othree/eregex.vim'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'danchoi/ri.vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+Plugin 'sjl/gundo.vim'
+Plugin 'tpope/vim-rbenv'
 
 call vundle#end()
 filetype plugin indent on
@@ -83,6 +86,8 @@ map <Leader>rt :!ripper-tags -R --exclude=vendor
 " Zeal docs
 nmap <leader>z :!zeal --query "<cword>" &> /dev/null &<CR><CR>
 
+" Gundo
+nnoremap <F6>:call GundoToggle()<CR>
 " ri.vim ruby documentation explorer
 nnoremap  <leader>ri :call ri#OpenSearchPrompt(0)<cr> " horizontal split
 nnoremap  <leader>RI :call ri#OpenSearchPrompt(1)<cr> " vertical split
@@ -99,6 +104,7 @@ nmap <leader>rc :call Rubocop()<CR>
 
 " Hardtime
 let g:hardtime_default_on = 1
+let g:hardtime_ignore_quickfix = 1
 
 " window
 nmap <leader>sw<left>  :topleft  vnew<CR>
@@ -201,6 +207,9 @@ if has("persistent_undo")
   set undofile
 endif
 
+" Autosave
+:au FocusLost * silent! wa
+
 " Search settings
 set ignorecase
 set smartcase
@@ -225,17 +234,13 @@ let &colorcolumn="80,".join(range(120,999),",")
 " Plugins
 """""""""""""""""""""""""
 
-let g:rspec_command = "!if [ -f ./bin/rspec ]; then; bundle exec spring rspec {spec}; else; bundle exec rspec {spec}; fi;"
+let g:rspec_command = "!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;"
 runtime macros/matchit.vim
 
 " Ctrl-P
 let g:ctrlp_working_path_mode = 'rw'
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
-
-" Default to filename searches - so that appctrl will find application
-" controller
-let g:ctrlp_by_filename = 1
 
 " Don't jump to already open window. This is annoying if you are maintaining
 " several Tab workspaces and want to open two windows into the same file.
@@ -279,57 +284,6 @@ set wildignore+=*.png,*.jpg,*.otf,*.woff,*.jpeg,*.orig
 " Markdown
 let g:vim_markdown_folding_disabled=1
 
-" Multiple cursors fix neocomplete
-
-function! Multiple_cursors_before()
-    exe 'NeoCompleteLock'
-    echo 'Disabled autocomplete'
-endfunction
-
-function! Multiple_cursors_after()
-    exe 'NeoCompleteUnlock'
-    echo 'Enabled autocomplete'
-endfunction
-
-"
-" Autocomplete
-"
-
-let g:neocomplete#max_list = 20
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-
 " Snippets
 
 " Tell Neosnippet about the other snippets
@@ -362,6 +316,7 @@ autocmd FileType ruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby let g:rubycomplete_buffer_loading = 1
 autocmd FileType ruby let g:rubycomplete_rails = 1
 autocmd FileType ruby let g:rubycomplete_classes_in_global = 0
+autocmd FileType ruby,eruby,yaml setlocal iskeyword+=?
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -386,7 +341,7 @@ au BufRead,BufNewFile Bowerfile setfiletype ruby
 
 function! Rubocop()
   exe "w"
-  silent exe "!rubocop -a % &> /dev/null"
+  silent exe "!rubocop -a -R % &> /dev/null"
   silent exe "e %"
   SyntasticCheck()
 endfun
