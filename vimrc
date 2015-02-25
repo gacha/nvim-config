@@ -5,7 +5,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
-Plugin 'takac/vim-hardtime'
+" Plugin 'takac/vim-hardtime'
 Plugin 'smeggingsmegger/ag.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
@@ -43,11 +43,13 @@ Plugin 'lukaszkorecki/CoffeeTags'
 Plugin 'othree/eregex.vim'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'elixir-lang/vim-elixir'
-Plugin 'danchoi/ri.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'sjl/gundo.vim'
 Plugin 'tpope/vim-rbenv'
+Plugin 'tpope/vim-abolish'
+Plugin 'jaxbot/browserlink.vim'
+Plugin 'vhladama/vim-rubyhash'
 
 call vundle#end()
 filetype plugin indent on
@@ -78,20 +80,19 @@ map <Leader>A :call RunAllSpecs()<CR>
 " clear highlight
 map <F3> :set hlsearch!<CR>
 " search&replace current word
-map <Leader>r :%S@<C-r><C-w>@
+map <Leader>rr :%S@<C-r><C-w>@
+" reload browser
+map <Leader>r :BLReloadPage<CR>
 
 " regenerate CTAGS with ripper-tags
 map <Leader>rt :!ripper-tags -R --exclude=vendor
 
-" Zeal docs
-nmap <leader>z :!zeal --query "<cword>" &> /dev/null &<CR><CR>
+" Devdocs docs
+command! -nargs=? DevDocs :call system('xdg-open http://devdocs.io/#q=<args> &')
+au FileType python,ruby,javascript,html,php,eruby,coffee nmap <buffer> K :exec "DevDocs " . fnameescape(expand('<cword>'))<CR>
 
 " Gundo
 nnoremap <F6>:call GundoToggle()<CR>
-" ri.vim ruby documentation explorer
-nnoremap  <leader>ri :call ri#OpenSearchPrompt(0)<cr> " horizontal split
-nnoremap  <leader>RI :call ri#OpenSearchPrompt(1)<cr> " vertical split
-nnoremap  <leader>RK :call ri#LookupNameUnderCursor()<cr> " keyword lookup
 
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
@@ -102,9 +103,9 @@ map <Leader>v :vnew <C-R>=escape(expand("%:p:h"), ' ') . '/'<CR>
 " Rubocop fix current file
 nmap <leader>rc :call Rubocop()<CR>
 
-" Hardtime
-let g:hardtime_default_on = 1
-let g:hardtime_ignore_quickfix = 1
+" " Hardtime
+" let g:hardtime_default_on = 1
+" let g:hardtime_ignore_quickfix = 1
 
 " window
 nmap <leader>sw<left>  :topleft  vnew<CR>
@@ -248,15 +249,19 @@ let g:ctrlp_switch_buffer = 0
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 let g:airline_section_z = ''
 
 " syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
 let g:syntastic_auto_loc_list=1
 let g:syntastic_enable_highlighting=0
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
-let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_open = 1
 let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '⚠'
@@ -264,7 +269,7 @@ let g:syntastic_auto_loc_list = 0
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': [],
                            \ 'passive_filetypes': ['html', 'c', 'scss'] }
-let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_ruby_checkers = ['mri', 'rubocop214']
 let g:syntastic_coffee_coffeelint_args = '-f ~/.coffeelint.json'
 let g:quickfixsigns_classes = ['qfl', 'vcsdiff', 'breakpoints']
 
