@@ -10,7 +10,6 @@ Plugin 'smeggingsmegger/ag.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
-Plugin 'tpope/vim-endwise'
 " themes
 Plugin 'morhetz/gruvbox'
 Plugin 'vim-scripts/wombat256.vim'
@@ -20,10 +19,19 @@ Plugin 'kris89/vim-multiple-cursors'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'bling/vim-airline'
 Plugin 'edkolev/tmuxline.vim'
-Plugin 'tpope/vim-rails'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'thoughtbot/vim-rspec'
+Plugin 'tpope/vim-projectionist'
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-rbenv'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-fugitive'
+Plugin 'Keithbsmiley/rspec.vim'
+Plugin 'thoughtbot/vim-rspec'
 Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
 Plugin 'tomtom/tcomment_vim'
@@ -33,7 +41,6 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'thinca/vim-localrc'
 Plugin 'alpaca-tc/beautify.vim'
 Plugin 'jgdavey/vim-blockle'
-Plugin 'tpope/vim-repeat'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'Valloric/YouCompleteMe'
@@ -44,10 +51,7 @@ Plugin 'othree/eregex.vim'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
 Plugin 'sjl/gundo.vim'
-Plugin 'tpope/vim-rbenv'
-Plugin 'tpope/vim-abolish'
 Plugin 'jaxbot/browserlink.vim'
 Plugin 'vhladama/vim-rubyhash'
 
@@ -85,11 +89,11 @@ map <Leader>rr :%S@<C-r><C-w>@
 map <Leader>r :BLReloadPage<CR>
 
 " regenerate CTAGS with ripper-tags
-map <Leader>rt :!ripper-tags -R --exclude=vendor
+map <Leader>ct :!ripper-tags -R --exclude=vendor<CR>
 
 " Devdocs docs
 command! -nargs=? DevDocs :call system('xdg-open http://devdocs.io/#q=<args> &')
-au FileType python,ruby,javascript,html,php,eruby,coffee nmap <buffer> K :exec "DevDocs " . fnameescape(expand('<cword>'))<CR>
+au FileType python,ruby,rspec,javascript,html,php,eruby,coffee nmap <buffer> K :exec "DevDocs " . fnameescape(expand('<cword>'))<CR>
 
 " Gundo
 nnoremap <F6>:call GundoToggle()<CR>
@@ -249,7 +253,7 @@ let g:ctrlp_switch_buffer = 0
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 0
+let g:airline_powerline_fonts = 1
 let g:airline_section_z = ''
 
 " syntastic
@@ -276,7 +280,7 @@ let g:quickfixsigns_classes = ['qfl', 'vcsdiff', 'breakpoints']
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
 
 " JS libs
-let g:used_javascript_libs = 'jquery, angularjs'
+let g:used_javascript_libs = 'jquery,angularjs,underscore'
 
 " ignores for ctrlp
 set wildignore+=tags
