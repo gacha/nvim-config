@@ -16,8 +16,8 @@ Other dependencies:
 
 To install, run
 
-    $ mkdir -p ~/.config/nvim/bundle && mkdir ~/.config/nvim/swap && mkdir ~/.config/nvim/undo
     $ git clone git://github.com/gacha/nvim-config.git ~/.config/nvim
+    $ mkdir ~/.config/nvim/bundle && mkdir ~/.config/nvim/swap && mkdir ~/.config/nvim/undo
     $ git clone https://github.com/Shougo/neobundle.vim ~/.config/nvim/bundle/neobundle.vim
 
 Then open neovim and install plugins
