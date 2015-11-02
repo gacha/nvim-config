@@ -1,34 +1,31 @@
 About
 ------------
-Vim config for ruby on rails developer.
+Neovim config for ruby on rails developer.
 
 Installation
 ------------
 
-To ensure that all plugins work you need to have vim with:
-  +ruby +python +X11
+To ensure that all plugins work you need to have neovim with python support.
+Check with `pip install neovim ` and `pip3 install neovim`.
 
-Also some external tools:
+Other dependencies:
 
-  * rubocop - for code quality
-  * zeal - for code documentation
-  * ctags
-  * ripper-tags - for propper ctags generation
-  * powerline-fonts - for better airline
+  - rubocop
+  - ripper-tags
+  - ag
 
 To install, run
 
-    $ git clone git://github.com/gacha/vim-config.git ~/.vim
-    $ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    $ mkdir ~/.vim/undo ~/.vim/swap
-    $ ln -s ~/.vim/vimrc ~/.vimrc
+    $ mkdir -p ~/.config/nvim/bundle && mkdir ~/.config/nvim/swap && mkdir ~/.config/nvim/undo
+    $ git clone git://github.com/gacha/nvim-config.git ~/.config/nvim
+    $ git clone https://github.com/Shougo/neobundle.vim ~/.config/nvim/bundle/neobundle.vim
 
-Then open vim and install plugins
+Then open neovim and install plugins
 
-    $ vim
-    :PluginInstall 
+    $ nvim
+    :NeoBundleInstall
 
 To update plugins run
 
     $ vim
-    :PluginUpdate 
+    :NeoBundleUpdate
