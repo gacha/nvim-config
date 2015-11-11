@@ -1,3 +1,5 @@
+let os = substitute(system('uname'), "\n", "", "")
+
 if has('vim_starting')
    " Required:
    set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
@@ -16,7 +18,6 @@ NeoBundle 'morhetz/gruvbox'
 " NeoBundle 'vim-scripts/wombat256.vim'
 " NeoBundle 'altercation/vim-colors-solarized'
 
-NeoBundle 'kris89/vim-multiple-cursors'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'bling/vim-airline'
 " NeoBundle 'edkolev/tmuxline.vim'
@@ -44,28 +45,25 @@ NeoBundle 'nelstrom/vim-textobj-rubyblock'
 NeoBundle 'thinca/vim-localrc'
 NeoBundle 'alpaca-tc/beautify.vim'
 NeoBundle 'jgdavey/vim-blockle'
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'othree/javascript-libraries-syntax.vim'
+" NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'othree/eregex.vim'
 NeoBundle 'wakatime/vim-wakatime'
 " NeoBundle 'elixir-lang/vim-elixir'
 NeoBundle 'sjl/gundo.vim'
-" NeoBundle 'vhladama/vim-rubyhash'
 " NeoBundle 'fatih/vim-go'
 " NeoBundle 'vim-scripts/groovy.vim'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'itchyny/dictionary.vim'
 " NeoBundle 'rhysd/vim-crystal'
-" NeoBundle 'junegunn/vim-peekaboo'
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-notes'
-NeoBundle 'mustache/vim-mustache-handlebars'
 NeoBundle 'kassio/neoterm'
 NeoBundle 'benekastah/neomake'
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-syntax'
+NeoBundle 'justinmk/vim-sneak'
 
 call neobundle#end()
 filetype plugin indent on
@@ -80,6 +78,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 """""""""""""""""""""""""
 let mapleader=","
 inoremap jj <ESC>
+map <Leader>r "hy:%S/<C-r>h//gc<left><left><left>
 map <Leader>rr :!ruby %<CR>
 map <Leader>w :w<CR>
 map <Leader>qa :wqa<CR>
@@ -99,9 +98,6 @@ let g:neoterm_position = 'vertical'
 let g:neoterm_automap_keys = ',tt'
 " let g:neoterm_rspec_lib_cmd = '!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;'
 let g:neoterm_rspec_lib_cmd = './bin/rspec'
-
-nnoremap <silent> <f9> :call neoterm#repl#line()<cr>
-vnoremap <silent> <f9> :call neoterm#repl#selection()<cr>
 
 " run set test lib
 nnoremap <Leader>A :call neoterm#test#run('all')<cr>
@@ -139,7 +135,6 @@ command! Qall qall
 command! W w
 nnoremap <C-y> :YRShow<cr>
 let g:ctrlp_map = '<c-e>'
-nmap <F8> :TagbarToggle<CR>
 nmap <F7> :setlocal spell! spell?<CR>
 " Toggle relative numbers
 map <Leader>n :call NumberToggle()<CR>
@@ -254,6 +249,9 @@ let &colorcolumn="80,".join(range(120,999),",")
 " Plugin's
 """""""""""""""""""""""""
 
+" enable kinda EasyMotion
+let g:sneak#streak = 1
+
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
@@ -276,7 +274,9 @@ if executable('ag')
       \ --ignore .hg
       \ --ignore .DS_Store
       \ -g ""'
-  let g:ctrlp_use_caching = 0
+  if os == "Darwin"
+    let g:ctrlp_use_caching = 0
+  endif
 else
   let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|log)$'
   let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
@@ -305,7 +305,9 @@ let g:neomake_ruby_reek_maker = {
 let g:neomake_ruby_reek_exe = $HOME . '/.rbenv/versions/2.2.3/bin/reek'
 let g:neomake_ruby_rubocop_exe = $HOME . '/.rbenv/versions/2.2.3/bin/rubocop'
 let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek']
-autocmd! BufWritePost * Neomake " Run on file write
+if os != "Darwin"
+  autocmd! BufWritePost * Neomake " Run on file write
+end
 nnoremap <Leader>l :lopen<CR>tocmd! BufWritePost * Neomake
 
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
