@@ -1,76 +1,67 @@
 let os = substitute(system('uname'), "\n", "", "")
 
-if has('vim_starting')
-   " Required:
-   set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-endif
-call neobundle#begin(expand('~/.config/nvim/bundle/'))
+call plug#begin('~/.vim/plugged')
 
-" Let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc.vim', {'build': { 'mac' : 'make -f make_mac.mak', 'linux' : 'make' }}
+Plug 'mileszs/ack.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tacahiroy/ctrlp-funky'
+Plug 'morhetz/gruvbox'
+" Plug 'vim-scripts/wombat256.vim'
+" Plug 'altercation/vim-colors-solarized'
+Plug 'kassio/neoterm'
+Plug 'benekastah/neomake'
+Plug 'Shougo/deoplete.nvim'
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+Plug 'bling/vim-airline'
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug 'tpope/vim-rake', { 'for': 'ruby' }
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
+Plug 'tpope/vim-bundler', { 'for': 'ruby' }
+Plug 'Keithbsmiley/rspec.vim', { 'for': 'ruby' }
+Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
+Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-fugitive'
+Plug 'int3/vim-extradite'
+Plug 'tpope/vim-haml'
+Plug 'tomtom/tcomment_vim'
+Plug 'nelstrom/vim-textobj-rubyblock'
+  Plug 'kana/vim-textobj-user'
+Plug 'thinca/vim-localrc'
+Plug 'jgdavey/vim-blockle'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'othree/eregex.vim'
+Plug 'wakatime/vim-wakatime'
+Plug 'othree/html5.vim'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-notes'
+Plug 'Shougo/neco-syntax'
+Plug 'easymotion/vim-easymotion'
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': 'javascript' }
+Plug 'mxw/vim-jsx', { 'for': 'javascript' }
+Plug 'ap/vim-css-color'
+Plug 'editorconfig/editorconfig-vim'
 
-NeoBundle 'smeggingsmegger/ag.vim'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-" themes
-NeoBundle 'morhetz/gruvbox'
-" NeoBundle 'vim-scripts/wombat256.vim'
-" NeoBundle 'altercation/vim-colors-solarized'
+" Other languages
+Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
+" Plug 'rhysd/vim-crystal', { 'for': 'crystal' }
+" Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+" Plug 'vim-scripts/groovy.vim', { 'for': 'groovy' }
+" Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
 
-NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'bling/vim-airline'
-" NeoBundle 'edkolev/tmuxline.vim'
-NeoBundle 'vim-ruby/vim-ruby'
-" NeoBundle 'tpope/vim-projectionist'
-NeoBundle 'tpope/vim-rake'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-vinegar'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-rbenv'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'int3/vim-extradite'
-NeoBundle 'tpope/vim-bundler'
-NeoBundle 'Keithbsmiley/rspec.vim'
-NeoBundle 'thoughtbot/vim-rspec'
-NeoBundle 'tpope/vim-haml'
-" NeoBundle 'majutsushi/tagbar'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'nelstrom/vim-textobj-rubyblock'
-  NeoBundle 'kana/vim-textobj-user'
-  NeoBundle 'edsono/vim-matchit'
-NeoBundle 'thinca/vim-localrc'
-NeoBundle 'alpaca-tc/beautify.vim'
-NeoBundle 'jgdavey/vim-blockle'
-" NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'othree/eregex.vim'
-NeoBundle 'wakatime/vim-wakatime'
-" NeoBundle 'elixir-lang/vim-elixir'
-NeoBundle 'sjl/gundo.vim'
-" NeoBundle 'fatih/vim-go'
-" NeoBundle 'vim-scripts/groovy.vim'
-NeoBundle 'othree/html5.vim'
-NeoBundle 'itchyny/dictionary.vim'
-" NeoBundle 'rhysd/vim-crystal'
-NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-notes'
-NeoBundle 'kassio/neoterm'
-NeoBundle 'benekastah/neomake'
-NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'Shougo/neco-syntax'
-NeoBundle 'justinmk/vim-sneak'
-
-call neobundle#end()
-filetype plugin indent on
-NeoBundleCheck
+call plug#end()
 
 " true colors
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+set termguicolors
 
 "-----------------------
 """""""""""""""""""""""""
@@ -93,11 +84,9 @@ map <Leader>r8 :vertical resize 80<CR>
 map <Leader>r12 :vertical resize 120<CR>
 map <F5> :so $MYVIMRC<CR>
 nnoremap <leader>. :CtrlPTag <CR>
-let g:neoterm_clear_cmd = "clear; printf '=%.0s' {1..80}; clear"
-let g:neoterm_position = 'vertical'
-let g:neoterm_automap_keys = ',tt'
-" let g:neoterm_rspec_lib_cmd = '!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;'
-let g:neoterm_rspec_lib_cmd = './bin/rspec'
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 " run set test lib
 nnoremap <Leader>A :call neoterm#test#run('all')<cr>
@@ -112,10 +101,10 @@ nnoremap <Leader>tc :call neoterm#close_all()<cr>
 nnoremap <Leader>tl :call neoterm#clear()<cr>
 
 " clear highlight
-map <Leader>h :set hlsearch!<CR>
+map <Leader><Leader>h :set hlsearch!<CR>
 
-" regenerate CTAGS with ripper-tags
-map <Leader>ct :silent !~/.rbenv/versions/2.2.3/bin/ripper-tags -R --exclude=vendor<CR>
+" regenerate CTAGS with ripper-tags and coffeetags
+map <Leader>ct :silent !~/.rbenv/shims/ripper-tags -R --exclude=vendor && ~/.rbenv/shims/coffeetags -R -a -f tags<CR>
 
 " Devdocs docs
 command! -nargs=? DevDocs :call system('type -p open >/dev/null 2>&1 && open http://devdocs.io/#q=<args> || xdg-open http://devdocs.io/#q=<args>')
@@ -127,13 +116,27 @@ map <Leader>e :e <C-R>=escape(expand("%:p:h"),' ') . '/'<CR>
 map <Leader>s :split <C-R>=escape(expand("%:p:h"), ' ') . '/'<CR>
 map <Leader>v :vnew <C-R>=escape(expand("%:p:h"), ' ') . '/'<CR>
 
+" EasyMotion
+nmap s <Plug>(easymotion-s2)
+nmap t <Plug>(easymotion-t2)
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
 " Rubocop fix current file
 nmap <leader>rc :call RubocopAutoFix()<CR>
+
+" Easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 command! Q q " Bind :Q to :q
 command! Qall qall
 command! W w
-nnoremap <C-y> :YRShow<cr>
+nnoremap <C-t> :FZF<cr>
 let g:ctrlp_map = '<c-e>'
 nmap <F7> :setlocal spell! spell?<CR>
 " Toggle relative numbers
@@ -141,6 +144,22 @@ map <Leader>n :call NumberToggle()<CR>
 " Toggle dark/ligh colortheme
 map <Leader>c :call ColorToggle()<CR>
 
+" Open Neomake warning/error split
+nnoremap <Leader><Leader>l :lopen<CR>tocmd! BufWritePost * Neomake
+
+" Neosnippet Plugin's key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+
+" Silversearcher
+let g:fzf_command_prefix = 'Ack'
+let g:ackprg = 'ag --vimgrep --smart-case'
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
 
 " some built in keybindings for included plugins
 "
@@ -155,6 +174,7 @@ map <Leader>c :call ColorToggle()<CR>
 """""""""""""""""""""""""
 
 " Misc
+set lazyredraw
 set splitbelow
 set splitright
 set complete+=kspell
@@ -166,8 +186,8 @@ set termencoding=utf-8
 set clipboard+=unnamed
 filetype plugin indent on " Do filetype detection and load custom file plugins and indent files
 set laststatus=2          " When you go into insert mode,
-                          " the status line color changes. 
-                          " When you leave insert mode, 
+                          " the status line color changes.
+                          " When you leave insert mode,
                           " the status line color changes back.
 
 " Display options
@@ -218,8 +238,12 @@ set incsearch
 "   n... : where to save the viminfo files
 set viminfo=%100,'100,/100,h,\"500,:100,n~/.config/nvim/viminfo
 
+" Autosave
+autocmd CursorHold,CursorHoldI,InsertLeave * silent! wall
+
 " Undo
-set undolevels=10000
+set undolevels=1000                     " How many undos
+set undoreload=10000                    " number of lines to save for undo
 if has("persistent_undo")
   set undodir=~/.config/nvim/undo       " Allow undoes to persist even after a file is closed
   set undofile
@@ -248,25 +272,31 @@ let &colorcolumn="80,".join(range(120,999),",")
 """""""""""""""""""""""""
 " Plugin's
 """""""""""""""""""""""""
-
-" enable kinda EasyMotion
-let g:sneak#streak = 1
-
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#omni_patterns = {}
-let g:deoplete#omni_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
-let g:deoplete#sources = {}
-let g:deoplete#sources._ = ['buffer', 'tag']
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+let g:deoplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
+\}
+
+" For clang with 
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
+let g:clang_omnicppcomplete_compliance = 0
+let g:clang_make_default_keymappings = 0
+let g:clang_library_path = '/usr/lib/llvm-3.5/lib'
 
 " Notes
 let g:notes_directories = ['~/Dropbox/Notes']
+let g:notes_tab_indents = 0
+let g:notes_word_boundaries = 1
+
 
 let g:rspec_command = "!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;"
 
 " Ctrl-P
 let g:ctrlp_working_path_mode = 'rw'
+let g:ctrlp_cmd = 'CtrlPMRU'
 if executable('ag')
   let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
       \ --ignore .git
@@ -286,13 +316,18 @@ endif
 " several Tab workspaces and want to open two windows into the same file.
 let g:ctrlp_switch_buffer = 1
 
+" Funky
+let g:ctrlp_funky_ruby_classes = 1
+let g:ctrlp_funky_ruby_modules = 1
+
 " Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:tmuxline_powerline_separators = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_section_z = ''
+let g:airline_section_z = "%{neoterm#test#status('running')}%{neoterm#test#status('success')}%{neoterm#test#status('failed')}"
+
 
 " Neomake
 let g:neomake_ruby_reek_maker_errorformat =
@@ -302,18 +337,27 @@ let g:neomake_ruby_reek_maker = {
     \ 'args': ['--single-line'],
     \ 'errorformat': g:neomake_ruby_reek_maker_errorformat,
     \ }
-let g:neomake_ruby_reek_exe = $HOME . '/.rbenv/versions/2.2.3/bin/reek'
-let g:neomake_ruby_rubocop_exe = $HOME . '/.rbenv/versions/2.2.3/bin/rubocop'
+let g:neomake_ruby_reek_exe = $HOME . '/.rbenv/shims/reek'
+let g:neomake_ruby_rubocop_exe = $HOME . '/.rbenv/shims/rubocop'
+
 let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek']
-if os != "Darwin"
-  autocmd! BufWritePost * Neomake " Run on file write
-end
-nnoremap <Leader>l :lopen<CR>tocmd! BufWritePost * Neomake
+let g:neomake_serialize = 1
+let g:neomake_serialize_abort_on_error = 1
+" Run NeoMake on read and write operations
+autocmd! BufReadPost,BufWritePost * Neomake
 
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
 
+" Neoterm
+let g:neoterm_clear_cmd = "clear; printf '=%.0s' {1..80}; clear"
+let g:neoterm_run_tests_bg = 1
+let g:neoterm_raise_when_tests_fail = 1
+let g:neoterm_size = 10
+
+let g:neoterm_rspec_lib_cmd = 'bundle exec ./bin/rspec'
+
 " JS libs
-let g:used_javascript_libs = 'jquery,angularjs,underscore'
+let g:used_javascript_libs = 'jquery,handlebars,underscore'
 
 " ignores for ctrlp
 set wildignore+=tags
@@ -331,11 +375,6 @@ let g:vim_markdown_folding_disabled=1
 " Tell Neosnippet about the other snippets
 let g:neosnippet#snippets_directory='~/.config/nvim/neosnippets'
 
-" Plugin's key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
@@ -349,8 +388,13 @@ if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
-" The silver searcher
-let g:ag_working_path_mode="r"
+" EasyMotion
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+" type `l` and match `l`&`L`
+let g:EasyMotion_smartcase = 1
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_smartsign_us = 1
 
 " Tags
 set tags+=,ruby.tags
@@ -358,20 +402,22 @@ set tags+=,coffee.tags
 
 " ruby
 autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=?
+autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=!
 
-" Autocomplete
-
+" omnifuncs
+set omnifunc=syntaxcomplete#Complete
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
-" syntax Bowerfile as ruby
-au BufRead,BufNewFile Bowerfile setfiletype ruby
 " Markdown
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd FileType markdown setlocal spell
 autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+
+" Handlebars/Mustache
+autocmd BufRead,BufNewFile *.hb.erb set filetype=mustache
 
 """""""""""""""""""""""""
 " Custom functions
@@ -381,7 +427,7 @@ autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 
 function! RubocopAutoFix()
   exe "w"
-  silent exe "!rubocop -a -R % &> /dev/null"
+  silent exe "!~/.rbenv/shims/rubocop -a -R % &> /dev/null"
   silent exe "e %"
   silent exe "Neomake"
 endfun
@@ -394,10 +440,10 @@ function! ChangePaste(type, ...)
 endfunction
 
 " When opening a file, always jump to the last cursor position
-" autocmd BufReadPost *
-"     \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-"     \     exe "normal g'\"" |
-"     \ endif |
+autocmd BufReadPost *
+    \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+    \     exe "normal g'\"" |
+    \ endif |
 
 function! NumberToggle()
   if(&relativenumber == 1)
