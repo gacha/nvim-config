@@ -45,7 +45,6 @@ Then open neovim and install plugins
 
     $ nvim
     :PlugInstall
-    :UpdateRemotePlugins
 
 To update plugins run
 

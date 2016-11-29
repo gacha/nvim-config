@@ -8,7 +8,9 @@ Plug 'morhetz/gruvbox'
 " Plug 'altercation/vim-colors-solarized'
 Plug 'kassio/neoterm'
 Plug 'benekastah/neomake'
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
+Plug 'ervandew/supertab'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'bling/vim-airline'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
@@ -18,7 +20,6 @@ Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'Keithbsmiley/rspec.vim', { 'for': 'ruby' }
 Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
-Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
@@ -32,8 +33,6 @@ Plug 'nelstrom/vim-textobj-rubyblock'
   Plug 'kana/vim-textobj-user'
 Plug 'thinca/vim-localrc'
 Plug 'jgdavey/vim-blockle'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
 Plug 'othree/eregex.vim'
 Plug 'wakatime/vim-wakatime'
 Plug 'othree/html5.vim'
@@ -45,11 +44,15 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript','coffee'] }
-Plug 'othree/vim-coffee-script', { 'for': 'coffee' }
-Plug 'mxw/vim-jsx', { 'for': 'javascript' }
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx', 'coffee'] }
+Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'mxw/vim-jsx', { 'for': 'javascript.jsx' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'ap/vim-css-color'
 Plug 'editorconfig/editorconfig-vim'
+
 
 " Other languages
 Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
@@ -144,12 +147,6 @@ map <Leader>c :call ColorToggle()<CR>
 
 " Open Neomake warning/error split
 nnoremap <Leader><Leader>l :lopen<CR>tocmd! BufWritePost * Neomake
-
-" Neosnippet Plugin's key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
 
 " Silversearcher
 let g:ackprg = 'ag --vimgrep --smart-case'
@@ -275,6 +272,8 @@ let g:monster#completion#rcodetools#backend = "async_rct_complete"
 let g:deoplete#sources#omni#input_patterns = {
 \   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
 \}
+" use tab
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " For clang with
 let g:clang_complete_auto = 0
@@ -282,6 +281,11 @@ let g:clang_auto_select = 0
 let g:clang_omnicppcomplete_compliance = 0
 let g:clang_make_default_keymappings = 0
 let g:clang_library_path = '/usr/lib/llvm-3.5/lib'
+
+" Ultisnip
+let g:UltiSnipsExpandTrigger="<C-j>"
+let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
+
 
 " Notes
 let g:notes_directories = ['~/Dropbox/Notes']
@@ -338,24 +342,6 @@ set wildignore+=*.png,*.jpg,*.otf,*.woff,*.jpeg,*.orig
 
 " Markdown
 let g:vim_markdown_folding_disabled=1
-
-" Snippets
-
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.config/nvim/neosnippets'
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 " EasyMotion
 " Use uppercase target labels and type as a lower case
