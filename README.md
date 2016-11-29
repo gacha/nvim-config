@@ -6,16 +6,16 @@ Features
 ------------
 
   - ruby async autocomplete
-  - ruby linting with rubocop/reek
-  - auto correct/save ruby file with `<leader>rc` using rubocom
+  - ruby async linting with rubocop/reek
+  - auto correct/save ruby file with `<leader>rc` using rubocop
   - generate ctags `<leader>ct`
   - search in ctags with `,.`
   - you can undo even after the editor was closed
   - file opens in the same line
   - open `devdoc.io` documentation for current string `K`
   - inline rspec execution with `<leader>R`
-  - normal(not strange vim syntax) posix REGEXP with `/`
-  - fast project navigation with Fzf and ctrlP
+  - search content of file using normal (no alien regexp vim syntax) posix REGEXP with `/`
+  - fast project/buffer/ctags navigation with Fzf
   - fast file browsing with `-` and split browsing `<Leader>e` or `<Leader>v`
   - fast [esc] with "jj"
   - fast jumping in normal mode `s` followed by 2 chars
