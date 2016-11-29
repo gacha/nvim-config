@@ -3,8 +3,6 @@ let os = substitute(system('uname'), "\n", "", "")
 call plug#begin('~/.vim/plugged')
 
 Plug 'mileszs/ack.vim'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tacahiroy/ctrlp-funky'
 Plug 'morhetz/gruvbox'
 " Plug 'vim-scripts/wombat256.vim'
 " Plug 'altercation/vim-colors-solarized'
@@ -45,8 +43,10 @@ Plug 'Shougo/neco-syntax'
 Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'othree/javascript-libraries-syntax.vim', { 'for': 'javascript' }
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript','coffee'] }
+Plug 'othree/vim-coffee-script', { 'for': 'coffee' }
 Plug 'mxw/vim-jsx', { 'for': 'javascript' }
 Plug 'ap/vim-css-color'
 Plug 'editorconfig/editorconfig-vim'
@@ -83,10 +83,9 @@ map // :TComment<CR>
 map <Leader>r8 :vertical resize 80<CR>
 map <Leader>r12 :vertical resize 120<CR>
 map <F5> :so $MYVIMRC<CR>
-nnoremap <leader>. :CtrlPTag <CR>
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-" narrow the list down with a word under cursor
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+nnoremap <leader>. :Tags <CR>
+nnoremap <Leader>fu :BTags<Cr>
+nnoremap <C-e> :Buffers<CR>
 
 " run set test lib
 nnoremap <Leader>A :call neoterm#test#run('all')<cr>
@@ -137,7 +136,6 @@ command! Q q " Bind :Q to :q
 command! Qall qall
 command! W w
 nnoremap <C-t> :FZF<cr>
-let g:ctrlp_map = '<c-e>'
 nmap <F7> :setlocal spell! spell?<CR>
 " Toggle relative numbers
 map <Leader>n :call NumberToggle()<CR>
@@ -154,7 +152,6 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 
 " Silversearcher
-let g:fzf_command_prefix = 'Ack'
 let g:ackprg = 'ag --vimgrep --smart-case'
 cnoreabbrev ag Ack
 cnoreabbrev aG Ack
@@ -279,7 +276,7 @@ let g:deoplete#sources#omni#input_patterns = {
 \   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
 \}
 
-" For clang with 
+" For clang with
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
 let g:clang_omnicppcomplete_compliance = 0
@@ -293,32 +290,6 @@ let g:notes_word_boundaries = 1
 
 
 let g:rspec_command = "!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;"
-
-" Ctrl-P
-let g:ctrlp_working_path_mode = 'rw'
-let g:ctrlp_cmd = 'CtrlPMRU'
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
-      \ --ignore .git
-      \ --ignore .svn
-      \ --ignore .hg
-      \ --ignore .DS_Store
-      \ -g ""'
-  if os == "Darwin"
-    let g:ctrlp_use_caching = 0
-  endif
-else
-  let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|log)$'
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
-endif
-
-" Don't jump to already open window. This is annoying if you are maintaining
-" several Tab workspaces and want to open two windows into the same file.
-let g:ctrlp_switch_buffer = 1
-
-" Funky
-let g:ctrlp_funky_ruby_classes = 1
-let g:ctrlp_funky_ruby_modules = 1
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -346,8 +317,6 @@ let g:neomake_serialize_abort_on_error = 1
 " Run NeoMake on read and write operations
 autocmd! BufReadPost,BufWritePost * Neomake
 
-let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so|\.log'
-
 " Neoterm
 let g:neoterm_clear_cmd = "clear; printf '=%.0s' {1..80}; clear"
 let g:neoterm_run_tests_bg = 1
@@ -357,9 +326,9 @@ let g:neoterm_size = 10
 let g:neoterm_rspec_lib_cmd = 'bundle exec ./bin/rspec'
 
 " JS libs
-let g:used_javascript_libs = 'jquery,handlebars,underscore'
+let g:used_javascript_libs = 'jquery,handlebars,underscore,backbone'
 
-" ignores for ctrlp
+" ignored files
 set wildignore+=tags
 set wildignore+=*/tmp/*
 set wildignore+=*/spec/vcr/*
