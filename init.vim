@@ -45,7 +45,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx', 'coffee'] }
-Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'kchmck/vim-coffee-script', { 'for': ['coffee', 'haml', 'eruby'] }
 Plug 'mxw/vim-jsx', { 'for': 'javascript.jsx' }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -273,7 +273,7 @@ let g:deoplete#sources#omni#input_patterns = {
 \   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
 \}
 " use tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<C-i>"
 
 " For clang with
 let g:clang_complete_auto = 0
