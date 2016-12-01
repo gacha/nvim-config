@@ -273,7 +273,7 @@ let g:deoplete#sources#omni#input_patterns = {
 \   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
 \}
 " use tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<C-i>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " For clang with
 let g:clang_complete_auto = 0
