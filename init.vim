@@ -10,7 +10,6 @@ Plug 'kassio/neoterm'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
-Plug 'ervandew/supertab'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'bling/vim-airline'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
@@ -272,8 +271,17 @@ let g:monster#completion#rcodetools#backend = "async_rct_complete"
 let g:deoplete#sources#omni#input_patterns = {
 \   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
 \}
+call deoplete#custom#set('buffer', 'rank', 501)
+
 " use tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort "{{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
 " For clang with
 let g:clang_complete_auto = 0
