@@ -7,25 +7,27 @@ Plug 'morhetz/gruvbox'
 " Plug 'vim-scripts/wombat256.vim'
 " Plug 'altercation/vim-colors-solarized'
 Plug 'kassio/neoterm'
+Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
+Plug 'ujihisa/neco-look'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'bling/vim-airline'
-Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug 'vim-ruby/vim-ruby', { 'for': ['ruby', 'haml', 'eruby'] }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-rails', { 'for': ['ruby', 'eruby', 'haml', 'coffee', 'javascript'] }
 Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'Keithbsmiley/rspec.vim', { 'for': 'ruby' }
 Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
-Plug 'int3/vim-extradite'
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-haml'
 Plug 'tomtom/tcomment_vim'
 Plug 'nelstrom/vim-textobj-rubyblock'
@@ -43,7 +45,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx', 'coffee'] }
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'kchmck/vim-coffee-script', { 'for': ['coffee', 'haml', 'eruby'] }
 Plug 'mxw/vim-jsx', { 'for': 'javascript.jsx' }
 Plug 'SirVer/ultisnips'
@@ -51,6 +53,9 @@ Plug 'honza/vim-snippets'
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'ap/vim-css-color'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'rhysd/vim-grammarous'
+Plug 'cespare/vim-toml'
+Plug 'bfredl/nvim-miniyank'
 
 
 " Other languages
@@ -72,6 +77,7 @@ set termguicolors
 let mapleader=","
 inoremap jj <ESC>
 map <Leader>r "hy:%S/<C-r>h//gc<left><left><left>
+map <Leader>f *
 map <Leader>rr :!ruby %<CR>
 map <Leader>w :w<CR>
 map <Leader>qa :wqa<CR>
@@ -83,17 +89,18 @@ map <Leader>D "_dd<CR>
 map <Leader>d "_d<CR>
 map // :TComment<CR>
 map <Leader>r8 :vertical resize 80<CR>
-map <Leader>r12 :vertical resize 120<CR>
+map <Leader>r12 :vertical resize 130<CR>
 map <F5> :so $MYVIMRC<CR>
 nnoremap <leader>. :Tags <CR>
 nnoremap <Leader>fu :BTags<Cr>
 nnoremap <C-e> :Buffers<CR>
 
-" run set test lib
-nnoremap <Leader>A :call neoterm#test#run('all')<cr>
-nnoremap <Leader>T :call neoterm#test#run('file')<cr>
-nnoremap <Leader>R :call neoterm#test#run('current')<cr>
-nnoremap <Leader>L :call neoterm#test#rerun()<cr>
+" run set tests
+nmap <silent> <leader>R :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>A :TestSuite<CR>
+nmap <silent> <leader>L :TestLast<CR>
+nmap <silent> <leader>G :TestVisit<CR>
 
 " Useful maps
 " closes the all terminal buffers
@@ -105,11 +112,16 @@ nnoremap <Leader>tl :call neoterm#clear()<cr>
 map <Leader><Leader>h :set hlsearch!<CR>
 
 " regenerate CTAGS with ripper-tags and coffeetags
-map <Leader>ct :silent !~/.rbenv/shims/ripper-tags -R --exclude=vendor && ~/.rbenv/shims/coffeetags -R -a -f tags<CR>
+map <Leader>ct :silent !~/.rvm/gems/ruby-2.4.0/bin/ripper-tags -R --exclude=vendor && coffeetags -R -a -f tags<CR>
 
 " Devdocs docs
 command! -nargs=? DevDocs :call system('type -p open >/dev/null 2>&1 && open http://devdocs.io/#q=<args> || xdg-open http://devdocs.io/#q=<args>')
 au FileType python,ruby,rspec,javascript,html,php,eruby,coffee,haml nmap <buffer> K :exec "DevDocs " . fnameescape(expand('<cword>'))<CR>
+
+" Grammarous
+let g:grammarous#default_comments_only_filetypes = {
+            \ '*' : 1, 'help' : 0, 'markdown' : 0,
+            \ }
 
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
@@ -167,6 +179,7 @@ cnoreabbrev AG Ack
 """""""""""""""""""""""""
 
 " Misc
+set secure
 set lazyredraw
 set splitbelow
 set splitright
@@ -176,7 +189,7 @@ set shell=/bin/zsh
 scriptencoding utf-8
 set encoding=utf-8
 set termencoding=utf-8
-set clipboard+=unnamed
+set clipboard=unnamed
 filetype plugin indent on " Do filetype detection and load custom file plugins and indent files
 set laststatus=2          " When you go into insert mode,
                           " the status line color changes.
@@ -231,9 +244,6 @@ set incsearch
 "   n... : where to save the viminfo files
 set viminfo=%100,'100,/100,h,\"500,:100,n~/.config/nvim/viminfo
 
-" Autosave
-autocmd CursorHold,CursorHoldI,InsertLeave * silent! wall
-
 " Undo
 set undolevels=1000                     " How many undos
 set undoreload=10000                    " number of lines to save for undo
@@ -260,11 +270,32 @@ let xml_use_xhtml = 1
 " Show a vertical line/guard at column 80
 let &colorcolumn=join(range(81,999),",")
 highlight ColorColumn ctermbg=235 guibg=#2c2d27
-let &colorcolumn="80,".join(range(120,999),",")
+let &colorcolumn="80,".join(range(131,999),",")
+
+" terminal colors
+let g:terminal_color_0  = '#2e3436'
+let g:terminal_color_1  = '#cc0000'
+let g:terminal_color_2  = '#4e9a06'
+let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#3465a4'
+let g:terminal_color_5  = '#75507b'
+let g:terminal_color_6  = '#0b939b'
+let g:terminal_color_7  = '#d3d7cf'
+let g:terminal_color_8  = '#555753'
+let g:terminal_color_9  = '#ef2929'
+let g:terminal_color_10 = '#8ae234'
+let g:terminal_color_11 = '#fce94f'
+let g:terminal_color_12 = '#729fcf'
+let g:terminal_color_13 = '#ad7fa8'
+let g:terminal_color_14 = '#00f5e9'
+let g:terminal_color_15 = '#eeeeec'
 
 """""""""""""""""""""""""
 " Plugin's
 """""""""""""""""""""""""
+" Fzf
+" let g:fzf_tags_command = 'ripper-tags -R --exclude=vendor && coffeetags -R -a -f tags'
+
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -288,7 +319,7 @@ let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
 let g:clang_omnicppcomplete_compliance = 0
 let g:clang_make_default_keymappings = 0
-let g:clang_library_path = '/usr/lib/llvm-3.5/lib'
+let g:clang_library_path = '/usr/local/opt/llvm/lib'
 
 " Ultisnip
 let g:UltiSnipsExpandTrigger="<C-j>"
@@ -300,19 +331,20 @@ let g:notes_directories = ['~/Dropbox/Notes']
 let g:notes_tab_indents = 0
 let g:notes_word_boundaries = 1
 
-
-let g:rspec_command = "!if [ -f ./bin/rspec ]; then; ./bin/rspec {spec}; else; bundle exec rspec {spec}; fi;"
-
 " Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:tmuxline_powerline_separators = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_section_z = "%{neoterm#test#status('running')}%{neoterm#test#status('success')}%{neoterm#test#status('failed')}"
 
+" Vim test
+let test#strategy = "neoterm"
+let test#ruby#rspec#executable = 'rvm jruby-1.7.25@rails32 do rspec'
 
 " Neomake
+" let g:neomake_verbose = 3
+let g:neomake_logfile = '/tmp/neomake.log'
 let g:neomake_ruby_reek_maker_errorformat =
         \ '%E%.%#: Racc::ParseError: %f:%l :: %m,' .
         \ '%W%f:%l: %m'
@@ -320,14 +352,25 @@ let g:neomake_ruby_reek_maker = {
     \ 'args': ['--single-line'],
     \ 'errorformat': g:neomake_ruby_reek_maker_errorformat,
     \ }
-let g:neomake_ruby_reek_exe = $HOME . '/.rbenv/shims/reek'
-let g:neomake_ruby_rubocop_exe = $HOME . '/.rbenv/shims/rubocop'
 
-let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek']
+let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
+let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-" Run NeoMake on read and write operations
-autocmd! BufReadPost,BufWritePost * Neomake
+
+function! MyOnBattery()
+  if filereadable('/usr/bin/pmset')
+    silent exe "!pmset -g batt | grep discharging"
+    return !v:shell_error
+  else
+    return readfile('/sys/class/power_supply/AC/online') == ['0']
+  endif
+endfunction
+if MyOnBattery()
+  call neomake#configure#automake('w')
+else
+  call neomake#configure#automake('inrw', 1000)
+endif
 
 " Neoterm
 let g:neoterm_clear_cmd = "clear; printf '=%.0s' {1..80}; clear"
@@ -335,7 +378,7 @@ let g:neoterm_run_tests_bg = 1
 let g:neoterm_raise_when_tests_fail = 1
 let g:neoterm_size = 10
 
-let g:neoterm_rspec_lib_cmd = 'bundle exec ./bin/rspec'
+let g:neoterm_rspec_lib_cmd = 'bundle exec rspec'
 
 " JS libs
 let g:used_javascript_libs = 'jquery,handlebars,underscore,backbone'
@@ -359,10 +402,6 @@ let g:EasyMotion_smartcase = 1
 " Smartsign (type `3` and match `3`&`#`)
 let g:EasyMotion_use_smartsign_us = 1
 
-" Tags
-set tags+=,ruby.tags
-set tags+=,coffee.tags
-
 " ruby
 autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=?
 autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=!
@@ -382,6 +421,9 @@ autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 " Handlebars/Mustache
 autocmd BufRead,BufNewFile *.hb.erb set filetype=mustache
 
+" Git turn on spellcheck
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
 """""""""""""""""""""""""
 " Custom functions
 """""""""""""""""""""""""
@@ -390,7 +432,7 @@ autocmd BufRead,BufNewFile *.hb.erb set filetype=mustache
 
 function! RubocopAutoFix()
   exe "w"
-  silent exe "!~/.rbenv/shims/rubocop -a -R % &> /dev/null"
+  silent exe "!rubocop -a -R % &> /dev/null"
   silent exe "e %"
   silent exe "Neomake"
 endfun
@@ -424,3 +466,8 @@ function! ColorToggle()
     set background=dark
   endif
 endfunction
+
+if $VIM_CRONTAB == "true"
+    set nobackup
+    set nowritebackup
+endif
