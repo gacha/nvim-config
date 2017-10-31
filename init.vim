@@ -67,8 +67,8 @@ Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
 
 call plug#end()
 
-" true colors
-set termguicolors
+set termguicolors " true colors
+set exrc " loads project specific .nvimrc
 
 "-----------------------
 """""""""""""""""""""""""
@@ -340,7 +340,6 @@ let g:airline_right_sep = ''
 
 " Vim test
 let test#strategy = "neoterm"
-let test#ruby#rspec#executable = 'rvm jruby-1.7.25@rails32 do rspec'
 
 " Neomake
 " let g:neomake_verbose = 3
