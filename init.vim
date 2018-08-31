@@ -2,15 +2,14 @@ let os = substitute(system('uname'), "\n", "", "")
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'mileszs/ack.vim'
 Plug 'morhetz/gruvbox'
 " Plug 'vim-scripts/wombat256.vim'
 " Plug 'altercation/vim-colors-solarized'
+Plug 'chusiang/vim-sdcv' " How to install dict see https://askubuntu.com/questions/191125/is-there-an-offline-command-line-dictionary
 Plug 'kassio/neoterm'
 Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
 Plug 'ujihisa/neco-look'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'bling/vim-airline'
@@ -56,10 +55,12 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'cespare/vim-toml'
 Plug 'bfredl/nvim-miniyank'
-
+Plug 'int3/vim-extradite'
+Plug 'dzeban/vim-log-syntax'
+Plug 'stephpy/vim-yaml'
 
 " Other languages
-Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
+" Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
 " Plug 'rhysd/vim-crystal', { 'for': 'crystal' }
 " Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
 " Plug 'vim-scripts/groovy.vim', { 'for': 'groovy' }
@@ -68,7 +69,7 @@ Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
 call plug#end()
 
 set termguicolors " true colors
-set exrc " loads project specific .nvimrc
+set exrc " loads project spedific .nvimrc
 
 "-----------------------
 """""""""""""""""""""""""
@@ -101,6 +102,9 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>A :TestSuite<CR>
 nmap <silent> <leader>L :TestLast<CR>
 nmap <silent> <leader>G :TestVisit<CR>
+
+" Explain current word from dictionary
+nmap <silent> <leader>d :call SearchWord()<CR>
 
 " Useful maps
 " closes the all terminal buffers
@@ -142,9 +146,9 @@ nmap <leader>rc :call RubocopAutoFix()<CR>
 
 " Easy align
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+xmap ea <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+nmap ea <Plug>(EasyAlign)
 
 command! Q q " Bind :Q to :q
 command! Qall qall
@@ -158,13 +162,6 @@ map <Leader>c :call ColorToggle()<CR>
 
 " Open Neomake warning/error split
 nnoremap <Leader><Leader>l :lopen<CR>tocmd! BufWritePost * Neomake
-
-" Silversearcher
-let g:ackprg = 'ag --vimgrep --smart-case'
-cnoreabbrev ag Ack
-cnoreabbrev aG Ack
-cnoreabbrev Ag Ack
-cnoreabbrev AG Ack
 
 " some built in keybindings for included plugins
 "
@@ -199,12 +196,13 @@ set laststatus=2          " When you go into insert mode,
 " Display options
 syntax on
 set pastetoggle=<F12>
-set cursorline
+set nocursorline
 set number
 set list!                       " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
 colorscheme gruvbox
-let g:gruvbox_contrast_dark = "hard" " soft, medium, hard
+let g:gruvbox_contrast_dark = "medium" " soft, medium, hard
+let g:gruvbox_contrast_light = "medium"
 set background=dark
 set t_ut= " fixes transparent BG on tmux
 
@@ -221,7 +219,7 @@ set visualbell
 set mouse=a
 
 " Relative line numbers
-set relativenumber
+set norelativenumber
 autocmd InsertLeave * :call NumberToggle()
 autocmd InsertEnter * :call NumberToggle()
 
@@ -298,11 +296,7 @@ let g:terminal_color_15 = '#eeeeec'
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
-let g:monster#completion#rcodetools#backend = "async_rct_complete"
-let g:deoplete#sources#omni#input_patterns = {
-\   "ruby" : '[^. *\t]\.\w*\|\h\w*::'
-\}
-call deoplete#custom#set('buffer', 'rank', 501)
+call deoplete#custom#source('buffer', 'rank', 501)
 
 " use tab
 imap <silent><expr> <TAB>
@@ -375,6 +369,7 @@ endif
 let g:neoterm_clear_cmd = "clear; printf '=%.0s' {1..80}; clear"
 let g:neoterm_run_tests_bg = 1
 let g:neoterm_raise_when_tests_fail = 1
+let g:neoterm_default_mod = 'botright'
 let g:neoterm_size = 10
 
 let g:neoterm_rspec_lib_cmd = 'bundle exec rspec'
@@ -431,7 +426,7 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 
 function! RubocopAutoFix()
   exe "w"
-  silent exe "!rubocop -a -R % &> /dev/null"
+  silent exe "!rvm ruby-2.4.0 do rubocop -a -R % &> /dev/null"
   silent exe "e %"
   silent exe "Neomake"
 endfun
