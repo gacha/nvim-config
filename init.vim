@@ -3,16 +3,16 @@ let os = substitute(system('uname'), "\n", "", "")
 call plug#begin('~/.vim/plugged')
 
 Plug 'morhetz/gruvbox'
-" Plug 'vim-scripts/wombat256.vim'
-" Plug 'altercation/vim-colors-solarized'
 Plug 'chusiang/vim-sdcv' " How to install dict see https://askubuntu.com/questions/191125/is-there-an-offline-command-line-dictionary
 Plug 'kassio/neoterm'
 Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'ujihisa/neco-look'
+Plug 'Shougo/neco-syntax'
+Plug 'ujihisa/neco-look', { 'for': ['text', 'note', 'gitcommit', 'markdown'] }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-Plug 'bling/vim-airline'
+Plug 'itchyny/lightline.vim'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'vim-ruby/vim-ruby', { 'for': ['ruby', 'haml', 'eruby'] }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
 Plug 'tpope/vim-surround'
@@ -27,10 +27,11 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
-Plug 'tpope/vim-haml'
+Plug 'tpope/vim-haml', { 'for': ['haml'] }
+Plug 'slim-template/vim-slim', { 'for': ['slim'] }
 Plug 'tomtom/tcomment_vim'
-Plug 'nelstrom/vim-textobj-rubyblock'
-  Plug 'kana/vim-textobj-user'
+Plug 'nelstrom/vim-textobj-rubyblock', { 'for': ['ruby'] }
+  Plug 'kana/vim-textobj-user', { 'for': ['ruby'] }
 Plug 'thinca/vim-localrc'
 Plug 'jgdavey/vim-blockle'
 Plug 'othree/eregex.vim'
@@ -61,8 +62,9 @@ Plug 'stephpy/vim-yaml'
 
 " Other languages
 " Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
-" Plug 'rhysd/vim-crystal', { 'for': 'crystal' }
-" Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+Plug 'rhysd/vim-crystal', { 'for': 'crystal' }
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
 " Plug 'vim-scripts/groovy.vim', { 'for': 'groovy' }
 " Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
 
@@ -180,7 +182,6 @@ set secure
 set lazyredraw
 set splitbelow
 set splitright
-set complete+=kspell
 set diffopt+=vertical
 set shell=/bin/zsh
 scriptencoding utf-8
@@ -200,6 +201,7 @@ set nocursorline
 set number
 set list!                       " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
+autocmd filetype html,xml,go set listchars=tab:\│\ ,trail:-,extends:>,precedes:<,nbsp:+
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = "medium" " soft, medium, hard
 let g:gruvbox_contrast_light = "medium"
@@ -292,11 +294,27 @@ let g:terminal_color_15 = '#eeeeec'
 " Plugin's
 """""""""""""""""""""""""
 " Fzf
-" let g:fzf_tags_command = 'ripper-tags -R --exclude=vendor && coffeetags -R -a -f tags'
+command! -bang -nargs=+ -complete=dir Ag call fzf#vim#ag_raw(<q-args>, <bang>0)
+command! -bang -nargs=* F
+  \ call fzf#vim#grep(
+  \   'rg --iglob !tags --sort path --column --line-number --no-heading --color=always --colors match:none --colors match:style:bold --colors=match:fg:208 --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+command! -bang -nargs=* Fr
+  \ call fzf#vim#grep(
+  \   'rg --type ruby --sort path --column --line-number --no-heading --color=always --colors match:none --colors match:style:bold --colors=match:fg:208 --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#source('buffer', 'rank', 501)
+call deoplete#custom#source('_', 'max_candidates', 5)
+" deoplete-go settings
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " use tab
 imap <silent><expr> <TAB>
@@ -325,12 +343,17 @@ let g:notes_directories = ['~/Dropbox/Notes']
 let g:notes_tab_indents = 0
 let g:notes_word_boundaries = 1
 
-" Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:tmuxline_powerline_separators = 0
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
+" Lightline
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
 
 " Vim test
 let test#strategy = "neoterm"
@@ -345,7 +368,7 @@ let g:neomake_ruby_reek_maker = {
     \ 'args': ['--single-line'],
     \ 'errorformat': g:neomake_ruby_reek_maker_errorformat,
     \ }
-
+let b:neomake_ruby_rubocop_exe = "~/.rvm/gems/ruby-2.4.0/bin/rubocop"
 let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_serialize = 1
@@ -415,8 +438,19 @@ autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 " Handlebars/Mustache
 autocmd BufRead,BufNewFile *.hb.erb set filetype=mustache
 
-" Git turn on spellcheck
-autocmd Filetype gitcommit setlocal spell textwidth=72
+" Turn on spellcheck
+autocmd Filetype gitcommit,markdown,note setlocal spell textwidth=72
+autocmd Filetype gitcommit,markdown,note setlocal complete+=kspell
+
+" Crystal
+" ecr - like erb
+autocmd BufRead,BufNewFile *.ecr set filetype=.html.eruby
+
+" Golang
+au FileType go nmap <leader>R <Plug>(go-run)
+au FileType go nmap <leader>B <Plug>(go-build)
+au FileType go nmap <leader>T <Plug>(go-test)
+au FileType go nmap <leader>C <Plug>(go-coverage)
 
 """""""""""""""""""""""""
 " Custom functions
