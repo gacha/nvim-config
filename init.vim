@@ -9,14 +9,14 @@ Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-syntax'
-Plug 'ujihisa/neco-look', { 'for': ['text', 'note', 'gitcommit', 'markdown'] }
+Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'vim-ruby/vim-ruby', { 'for': ['ruby', 'haml', 'eruby'] }
+Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-rails', { 'for': ['ruby', 'eruby', 'haml', 'coffee', 'javascript'] }
+Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'Keithbsmiley/rspec.vim', { 'for': 'ruby' }
@@ -44,6 +44,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'mileszs/ack.vim'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'kchmck/vim-coffee-script', { 'for': ['coffee', 'haml', 'eruby'] }
@@ -97,6 +98,8 @@ map <F5> :so $MYVIMRC<CR>
 nnoremap <leader>. :Tags <CR>
 nnoremap <Leader>fu :BTags<Cr>
 nnoremap <C-e> :Buffers<CR>
+" fix method jumping
+nnoremap <buffer><silent> <C-]> :tag <C-R><C-W><CR>
 
 " run set tests
 nmap <silent> <leader>R :TestNearest<CR>
@@ -117,8 +120,8 @@ nnoremap <Leader>tl :call neoterm#clear()<cr>
 " clear highlight
 map <Leader><Leader>h :set hlsearch!<CR>
 
-" regenerate CTAGS with ripper-tags and coffeetags
-map <Leader>ct :silent !~/.rvm/gems/ruby-2.4.0/bin/ripper-tags -R --exclude=vendor && coffeetags -R -a -f tags<CR>
+" regenerate CTAGS - https://github.com/universal-ctags/ctags
+map <Leader>ct :silent !ctags -R --exclude="*min.js"<CR>
 
 " Devdocs docs
 command! -nargs=? DevDocs :call system('type -p open >/dev/null 2>&1 && open http://devdocs.io/#q=<args> || xdg-open http://devdocs.io/#q=<args>')
@@ -155,7 +158,10 @@ nmap ea <Plug>(EasyAlign)
 command! Q q " Bind :Q to :q
 command! Qall qall
 command! W w
-nnoremap <C-t> :FZF<cr>
+" FZF
+nnoremap <C-f> :FZF<cr>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+
 nmap <F7> :setlocal spell! spell?<CR>
 " Toggle relative numbers
 map <Leader>n :call NumberToggle()<CR>
@@ -214,6 +220,7 @@ set hidden                         " Don't abandon buffers moved to the backgrou
 set wildmenu                       " Enhanced completion hints in command line
 set backspace=eol,start,indent     " Allow backspacing over indent, eol, & start
 set complete=.,w,b,u,U,t,i,d       " Do lots of scanning on tab completion
+set completeopt-=preview           " Do not show preview window, just the menu
 set directory=~/.config/nvim/swap  " Directory to use for the swap file
 set diffopt=filler,iwhite          " In diff mode, ignore whitespace changes and align unchanged lines
 set nowrap
@@ -293,25 +300,25 @@ let g:terminal_color_15 = '#eeeeec'
 """""""""""""""""""""""""
 " Plugin's
 """""""""""""""""""""""""
-" Fzf
-command! -bang -nargs=+ -complete=dir Ag call fzf#vim#ag_raw(<q-args>, <bang>0)
-command! -bang -nargs=* F
-  \ call fzf#vim#grep(
-  \   'rg --iglob !tags --sort path --column --line-number --no-heading --color=always --colors match:none --colors match:style:bold --colors=match:fg:208 --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-command! -bang -nargs=* Fr
-  \ call fzf#vim#grep(
-  \   'rg --type ruby --sort path --column --line-number --no-heading --color=always --colors match:none --colors match:style:bold --colors=match:fg:208 --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
+" Ack.vimm
+cnoreabbrev ag Ack -Q
+cnoreabbrev aG Ack -Q
+cnoreabbrev Ag Ack -Q
+cnoreabbrev AG Ack -Q
+cnoreabbrev F Ack -Q
+cnoreabbrev f Ack -Q
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep --smart-case'
+endif
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_start_length = 2
+call deoplete#custom#source('_', 'max_candidates', 3)
 call deoplete#custom#source('buffer', 'rank', 501)
-call deoplete#custom#source('_', 'max_candidates', 5)
+call deoplete#custom#source('buffer', 'max_candidates', 2)
+call deoplete#custom#source('tabnine', 'rank', 50)
+
 " deoplete-go settings
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
@@ -368,7 +375,7 @@ let g:neomake_ruby_reek_maker = {
     \ 'args': ['--single-line'],
     \ 'errorformat': g:neomake_ruby_reek_maker_errorformat,
     \ }
-let b:neomake_ruby_rubocop_exe = "~/.rvm/gems/ruby-2.4.0/bin/rubocop"
+let b:neomake_ruby_rubocop_exe = "~/.rvm/gems/ruby-2.5.3/bin/rubocop"
 let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_serialize = 1
@@ -422,6 +429,8 @@ let g:EasyMotion_use_smartsign_us = 1
 " ruby
 autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=?
 autocmd FileType ruby,eruby,yaml,haml setlocal iskeyword+=!
+autocmd FileType ruby compiler ruby
+
 
 " omnifuncs
 set omnifunc=syntaxcomplete#Complete
@@ -460,7 +469,7 @@ au FileType go nmap <leader>C <Plug>(go-coverage)
 
 function! RubocopAutoFix()
   exe "w"
-  silent exe "!rvm ruby-2.4.0 do rubocop -a -R % &> /dev/null"
+  silent exe "!rvm ruby-2.5.3 do rubocop -a -R % &> /dev/null"
   silent exe "e %"
   silent exe "Neomake"
 endfun

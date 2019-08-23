@@ -28,7 +28,7 @@ To ensure that all plugins work you need neovim dependencies:
 
     sudo pip2 install --upgrade neovim
     sudo pip3 install --upgrade neovim
-    gem install neovim rubocop reek ripper-tags
+    gem install neovim rubocop reek
 
 Other dependencies:
 
