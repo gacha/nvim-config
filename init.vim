@@ -9,7 +9,7 @@ Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-syntax'
-Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+" Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
@@ -62,7 +62,7 @@ Plug 'dzeban/vim-log-syntax'
 Plug 'stephpy/vim-yaml'
 
 " Other languages
-" Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
+Plug 'myint/clang-complete', { 'for': ['c', 'cpp'] }
 Plug 'rhysd/vim-crystal', { 'for': 'crystal' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
@@ -70,6 +70,12 @@ Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
 " Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
 
 call plug#end()
+
+" set Python
+if os == 'Darwin' || os == 'Mac'
+  let g:python_host_prog  = '/usr/local/bin/python'
+  let g:python3_host_prog  = '/usr/local/bin/python3'
+endif
 
 set termguicolors " true colors
 set exrc " loads project spedific .nvimrc
@@ -91,6 +97,7 @@ map <Leader>p "+p<CR>
 map <Leader>y "+y<CR>
 map <Leader>D "_dd<CR>
 map <Leader>d "_d<CR>
+map <Leader>t :Ttoggle<CR>
 map // :TComment<CR>
 map <Leader>r8 :vertical resize 80<CR>
 map <Leader>r12 :vertical resize 130<CR>
@@ -313,11 +320,10 @@ endif
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_start_length = 2
 call deoplete#custom#source('_', 'max_candidates', 3)
 call deoplete#custom#source('buffer', 'rank', 501)
 call deoplete#custom#source('buffer', 'max_candidates', 2)
-call deoplete#custom#source('tabnine', 'rank', 50)
+" call deoplete#custom#source('tabnine', 'rank', 50)
 
 " deoplete-go settings
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
@@ -355,10 +361,11 @@ let g:lightline = {
       \ 'colorscheme': 'gruvbox',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'readonly', 'filename', 'modified' ] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
+      \   'gitbranch': 'fugitive#head',
+      \   'filename': 'LightlineFilename'
       \ },
       \ }
 
@@ -368,15 +375,14 @@ let test#strategy = "neoterm"
 " Neomake
 " let g:neomake_verbose = 3
 let g:neomake_logfile = '/tmp/neomake.log'
-let g:neomake_ruby_reek_maker_errorformat =
-        \ '%E%.%#: Racc::ParseError: %f:%l :: %m,' .
-        \ '%W%f:%l: %m'
 let g:neomake_ruby_reek_maker = {
-    \ 'args': ['--single-line'],
-    \ 'errorformat': g:neomake_ruby_reek_maker_errorformat,
+    \ 'args': '--single-line',
+    \ 'errorformat':
+    \   '%E%.%#: Racc::ParseError: %f:%l :: %m,' .
+    \   '%W%f:%l: %m'
     \ }
-let b:neomake_ruby_rubocop_exe = "~/.rvm/gems/ruby-2.5.3/bin/rubocop"
-let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
+" let b:neomake_ruby_flog_args = ['-t 10']
+let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek']
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
@@ -401,6 +407,7 @@ let g:neoterm_run_tests_bg = 1
 let g:neoterm_raise_when_tests_fail = 1
 let g:neoterm_default_mod = 'botright'
 let g:neoterm_size = 10
+let g:neoterm_autoscroll = 1
 
 let g:neoterm_rspec_lib_cmd = 'bundle exec rspec'
 
@@ -469,7 +476,7 @@ au FileType go nmap <leader>C <Plug>(go-coverage)
 
 function! RubocopAutoFix()
   exe "w"
-  silent exe "!rvm ruby-2.5.3 do rubocop -a -R % &> /dev/null"
+  silent exe "!rubocop -a -R % &> /dev/null"
   silent exe "e %"
   silent exe "Neomake"
 endfun
@@ -502,6 +509,13 @@ function! ColorToggle()
   else
     set background=dark
   endif
+endfunction
+
+function! LightlineFilename()
+  return &filetype ==# 'vimfiler' ? vimfiler#get_status_string() :
+        \ &filetype ==# 'unite' ? unite#get_status_string() :
+        \ &filetype ==# 'vimshell' ? vimshell#get_status_string() :
+        \ expand('%:t') !=# '' ? expand('%:p:h:t') . '/' . expand('%:t') : '[No Name]'
 endfunction
 
 if $VIM_CRONTAB == "true"
