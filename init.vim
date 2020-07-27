@@ -9,7 +9,7 @@ Plug 'janko-m/vim-test'
 Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-syntax'
-" Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
@@ -35,7 +35,6 @@ Plug 'nelstrom/vim-textobj-rubyblock', { 'for': ['ruby'] }
 Plug 'thinca/vim-localrc'
 Plug 'jgdavey/vim-blockle'
 Plug 'othree/eregex.vim'
-Plug 'wakatime/vim-wakatime'
 Plug 'othree/html5.vim'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
