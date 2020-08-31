@@ -76,7 +76,10 @@ if os == 'Darwin' || os == 'Mac'
   let g:python3_host_prog  = '/usr/local/bin/python3'
 endif
 
-set termguicolors " true colors
+if $TERM =~ '256'
+  set termguicolors " true colors
+  set t_Co=256
+endif
 set exrc " loads project spedific .nvimrc
 
 "-----------------------
