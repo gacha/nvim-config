@@ -1,0 +1,24 @@
+# See https://github.com/honza/vim-snippets/blob/master/snippets/ruby.snippets
+snippet dbg binding.break
+	require 'debug'; binding.break
+
+snippet bp binding.pry
+	binding.pry
+
+snippet rpry require 'pry' ; binding.pry
+	require 'pry' ; binding.pry
+
+snippet rpryr require 'pry-remote'; binding.remote_pry
+	require 'pry-remote' ; binding.remote_pry
+
+snippet pry binding.pry
+	binding.pry
+
+snippet pryr binding.remote_pry
+	binding.remote_pry
+
+snippet req require '<name>'
+	require '$0'
+
+snippet reqr require_relative '<name>'
+	require_relative '$1'
