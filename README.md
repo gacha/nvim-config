@@ -1,56 +1,30 @@
 About
 ------------
-Neovim config used by me as a ruby on rails developer.
+Neovim config used by me as a ruby developer.
 
 Features
 ------------
 
-  - ruby async autocomplete
-  - ruby async linting with rubocop/reek
-  - auto correct/save ruby file with `<leader>rc` using rubocop
-  - generate ctags `<leader>ct`
-  - search in ctags with `,.`
+  - LSP enabled
+  - autocompletes lsp, buffers, snippets, paths
   - you can undo even after the editor was closed
-  - file opens in the same line
-  - open `devdoc.io` documentation for current string `K`
-  - inline rspec execution with `<leader>R`
+  - file opens in the same line as was closed
+  - inline Rspec execution
   - search content of file using normal (no alien regexp vim syntax) posix REGEXP with `/`
-  - fast project/buffer/ctags navigation with Fzf
-  - fast file browsing with `-` and split browsing `<Leader>e` or `<Leader>v`
-  - fast [esc] with "jj"
+  - fast project/buffer/ navigation with Fzf
+  - fast file browsing using Oil, fast access with `-`
+  - fast [esc] with `jj`
   - fast jumping in normal mode `s` followed by 2 chars
+  - Minimal Gemini AI integration, just provide `GEMINI_API_KEY` ENV variable
+  - ...
 
 Installation
 ------------
 
 Install neovim.
-To ensure that all plugins work you need neovim dependencies:
-
-    sudo pip2 install --upgrade neovim
-    sudo pip3 install --upgrade neovim
-    gem install neovim rubocop reek
-
-Other dependencies:
-
-  - The silver searcher (apt-get|brew install ag) https://github.com/ggreer/the_silver_searcher
-
-To install, run
-
-    $ git clone git://github.com/gacha/nvim-config.git ~/.config/nvim
-    $ mkdir ~/.config/nvim/swap && mkdir ~/.config/nvim/undo
-    $ curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-Then open neovim and install plugins
-
-    $ nvim
-    :PlugInstall
-
-To update plugins run
-
-    $ vim
-    :PlugUpdate
+Run `:Lazy` and `I` to install all plugins.
+Run `:checkhealth` to see whats missing.
 
 Debug
 ------------
-If something doesn't work try `:messages` and `:CheckHealth`.
+If something doesn't work try `:messages`.
