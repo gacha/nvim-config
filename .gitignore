@@ -1,9 +1,5 @@
-/yankring_history*
 /viminfo
 /swap
-/after
-doc/tags
-.netrwhist
+/backup
 /undo
-/bundle
-/session
+lazy-lock.json
