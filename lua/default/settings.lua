@@ -20,11 +20,26 @@ vim.opt.spell = false -- enable later for specific file types
 vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
 
--- Undo
-if vim.fn.has('persistent_undo') == 1 then
-  vim.opt.undodir = vim.fn.expand('$HOME/.config/nvim/undo')
-  vim.opt.undofile = true
+-- Backup
+vim.opt.backupdir = vim.fn.expand('$HOME/.config/nvim/backup')
+if vim.fn.isdirectory(vim.opt.backupdir._value) == 0 then
+  vim.fn.mkdir(vim.opt.backupdir._value, 'p', '0o700')
 end
+vim.opt.backup = true
+
+-- Swap
+vim.opt.directory = vim.fn.expand('$HOME/.config/nvim/swap')
+if vim.fn.isdirectory(vim.opt.directory._value) == 0 then
+  vim.fn.mkdir(vim.opt.directory._value, 'p', '0o700')
+end
+vim.opt.swapfile = true
+
+-- Undo
+vim.opt.undodir = vim.fn.expand('$HOME/.config/nvim/undo')
+if vim.fn.isdirectory(vim.opt.undodir._value) == 0 then
+  vim.fn.mkdir(vim.opt.undodir._value, 'p', '0o700')
+end
+vim.opt.undofile = true
 
 -- Crontab
 if vim.env.VIM_CRONTAB == "true" then
