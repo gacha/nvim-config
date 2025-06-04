@@ -9,7 +9,7 @@ return {
     require('mason-lspconfig').setup {
       ensure_installed = {
         'rubocop', 'ruby_lsp', 'lua_ls', 'bashls',
-        'gopls', 'terraformls', 'tflint'
+        'gopls', 'terraformls', 'tflint', 'quick_lint_js'
       },
     }
   end
