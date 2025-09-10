@@ -52,6 +52,7 @@ return {
           },
         }
       },
+      extensions = {'quickfix', 'fzf', 'fugitive', 'lazy', 'oil'}
     }
   end,
 }
