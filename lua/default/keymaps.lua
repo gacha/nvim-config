@@ -17,6 +17,20 @@ vim.keymap.set({'n', 'x'}, '<leader>y', '"+y')
 vim.keymap.set({'n', 'x'}, '<leader>p', '"+p')
 vim.keymap.set('i', '<Tab>',   [[pumvisible() ? "\<C-n>" : "\<Tab>"]],   opts)
 vim.keymap.set('i', '<S-Tab>', [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], opts)
-vim.keymap.set('n', 'gl', function()
+
+-- Diagnostics
+local diagnostic_open_float = function()
   vim.diagnostic.open_float(0, {scope = 'line', close_events = {'CursorMoved', 'CursorMovedI', 'BufHidden', 'InsertCharPre', 'WinLeave'}})
+end
+
+vim.keymap.set('n', 'gl', function()
+  diagnostic_open_float()
+end)
+vim.keymap.set('n', '[d', function ()
+  vim.diagnostic.goto_prev()
+  diagnostic_open_float()
+end)
+vim.keymap.set('n', ']d', function ()
+  vim.diagnostic.goto_next()
+  diagnostic_open_float()
 end)
