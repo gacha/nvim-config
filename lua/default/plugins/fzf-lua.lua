@@ -13,8 +13,8 @@ return {
     }
     vim.keymap.set('n', '<C-p>', fzf_lua.builtin, { silent = true })
     vim.keymap.set('n', '<C-f>', fzf_lua.files, { silent = true })
-    vim.keymap.set('n', '<C-s>', function() fzf_lua.live_grep({rg_glob=true}) end, { silent = true })
-    vim.keymap.set('n', '<C-a>', function() fzf_lua.live_grep_resume({rg_glob=true}) end, { silent = true })
+    vim.keymap.set('n', '<C-s>', function() fzf_lua.live_grep({ rg_glob=true }) end, { silent = true })
+    vim.keymap.set('n', '<C-a>', function() fzf_lua.live_grep({ resume=true, rg_glob=true }) end, { silent = true })
     vim.keymap.set('n', '<C-e>', fzf_lua.buffers, { silent = true })
     vim.keymap.set('n', '<C-q>', function() fzf_lua.fill_quickfix() end, { silent = true })
     vim.keymap.set('n', '<leader>t', fzf_lua.btags, { silent = true })
