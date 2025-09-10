@@ -19,6 +19,7 @@ vim.opt.spelllang = 'en_us'
 vim.opt.spell = false -- enable later for specific file types
 vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
+vim.o.winborder = 'rounded'
 
 -- Backup
 vim.opt.backupdir = vim.fn.expand('$HOME/.config/nvim/backup')
