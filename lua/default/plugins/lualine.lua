@@ -35,7 +35,7 @@ return {
       options = { theme  = 'gruvbox' },
       sections = {
         lualine_a = {},
-        lualine_b = {},
+        lualine_b = {'branch', 'diff', 'diagnostics'},
         lualine_c = {
           {
             'filename',
