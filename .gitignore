@@ -1,5 +1,6 @@
 /viminfo
 /swap
+/spell/*.utf-8.add
 /backup
 /undo
 lazy-lock.json
