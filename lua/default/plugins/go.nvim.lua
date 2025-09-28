@@ -14,6 +14,13 @@ return {
         require('go.format').gofmt()
       end,
     })
+    -- Hide tab symbol
+    vim.api.nvim_create_autocmd( "FileType", {
+      pattern = "go",
+      callback = function()
+        vim.opt.listchars:append({ tab = '  ' })
+      end
+    })
   end,
   event = {'CmdlineEnter'},
   ft = {'go', 'gomod'},
