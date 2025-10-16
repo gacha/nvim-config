@@ -115,6 +115,20 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 -- AutoCommands
 --
 
+-- Fix a bug, when opening buffer search with / then diagnostic virtual_text enables itself
+vim.api.nvim_create_autocmd({ 'CmdlineChanged' }, {
+  pattern = '[/?]',
+  callback = function()
+    vim.diagnostic.disable()
+  end,
+})
+vim.api.nvim_create_autocmd('CmdlineLeave', {
+  pattern = '[/?]',
+  callback = function()
+    vim.diagnostic.enable()
+  end,
+})
+
 -- Go to the last location
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
