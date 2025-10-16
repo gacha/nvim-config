@@ -1,36 +1,54 @@
--- Methods to show CodeCompanion loading
-local function is_codecompanion_chat_buffer(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not vim.api.nvim_buf_is_valid(bufnr) then
-    return false
-  end
-
-  -- Option 1: Check by filetype (REPLACE 'codecompanion_ft' with the actual filetype)
-  local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-  if ft == "codecompanion" then
-    return true
-  end
-
-  return false
-end
-
-local function codecompanion_modifiable_status()
-  local current_bufnr = vim.api.nvim_get_current_buf()
-  if is_codecompanion_chat_buffer(current_bufnr) then
-    if not vim.api.nvim_get_option_value("modifiable", { buf = current_bufnr }) then
-      return "✨ AI is thinking..."
-    else
-      return ""
-    end
-  end
-  return ""
-end
--- end of CodeCompanion methods
-
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = {'nvim-tree/nvim-web-devicons'},
   config = function()
+    --CodeCompanion methods to show CodeCompanion loading
+    local code_companion = require("lualine.component"):extend()
+
+    code_companion.processing = false
+    code_companion.spinner_index = 1
+
+    local spinner_symbols = {
+      "⣾",
+      "⣽",
+      "⣻",
+      "⢿",
+      "⡿",
+      "⣟",
+      "⣯",
+      "⣷"
+    }
+
+    -- Initializer
+    function code_companion:init(options)
+      code_companion.super.init(self, options)
+
+      local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
+
+      vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "CodeCompanionRequest*",
+        group = group,
+        callback = function(request)
+          if request.match == "CodeCompanionRequestStarted" then
+            self.processing = true
+          elseif request.match == "CodeCompanionRequestFinished" then
+            self.processing = false
+          end
+        end,
+      })
+    end
+
+    -- Function that runs every time statusline is updated
+    function code_companion:update_status()
+      if self.processing then
+        self.spinner_index = (self.spinner_index % #spinner_symbols) + 1
+        return "✨ " .. spinner_symbols[self.spinner_index]
+      else
+        return nil
+      end
+    end
+    -- end of CodeCompanion methods
+
     require('lualine').setup {
       options = { theme  = 'gruvbox' },
       sections = {
@@ -41,7 +59,7 @@ return {
             'filename',
             path = 1,
           },
-          codecompanion_modifiable_status,
+          code_companion,
         },
       },
       inactive_sections = {
