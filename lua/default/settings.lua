@@ -21,6 +21,7 @@ vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
 vim.opt.winborder = 'rounded'
 vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 -- Backup
 vim.opt.backupdir = vim.fn.expand('$HOME/.config/nvim/backup')
