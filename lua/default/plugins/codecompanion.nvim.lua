@@ -12,6 +12,12 @@ return {
     strategies = {
       chat = {
         adapter = gemini_pro,
+        keymaps = {
+          send = {
+            modes = { n = "<Leader><CR>", i = "<C-s>" },
+            opts = {},
+          },
+        },
       },
       inline = {
         adapter = gemini_pro,
