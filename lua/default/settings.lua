@@ -19,7 +19,6 @@ vim.opt.spelllang = 'en_us'
 vim.opt.spell = false -- enable later for specific file types
 vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
-vim.opt.winborder = 'rounded'
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
