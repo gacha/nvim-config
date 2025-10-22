@@ -5,7 +5,9 @@ return {
     local fzf_lua = require('fzf-lua')
     fzf_lua.setup {
       winopts = {
+        border = 'solid',
         preview = {
+          border = 'solid',
           vertical = 'down:70%',
           layout = 'vertical',
         }

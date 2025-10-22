@@ -21,6 +21,9 @@ vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+-- vim.opt.winborder = 'solid' -- for all windows
+-- TODO: Enable this later
+-- vim.opt.pumborder = 'none' -- for popup menus
 
 -- Backup
 vim.opt.backupdir = vim.fn.expand('$HOME/.config/nvim/backup')
@@ -84,9 +87,8 @@ vim.api.nvim_create_autocmd({'VimEnter', 'CmdlineLeave'}, {
       severity_sort = true,
       float = {
         focusable = false,
-        style = "minimal",
-        border = "rounded",
         source = "if_many",
+        border = "solid",
         header = "",
         prefix = "",
         suffix  = "",
@@ -98,19 +100,6 @@ vim.api.nvim_create_autocmd({'VimEnter', 'CmdlineLeave'}, {
     }
   end
 })
-
--- LSP
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-    border = "rounded"
-  }
-)
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-    border = "rounded"
-  }
-)
 
 --
 -- AutoCommands
