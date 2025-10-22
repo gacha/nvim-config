@@ -12,5 +12,16 @@ return {
         'gopls', 'terraformls', 'tflint', 'quick_lint_js'
       },
     }
+    -- LUA
+    vim.lsp.config('lua_ls', {
+      settings = {
+        Lua = {
+          diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = {'vim'},
+          },
+        },
+      },
+    })
   end
 }
