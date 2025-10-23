@@ -44,7 +44,7 @@ return {
         max_view_entries = 10,
       },
       view = {
-        -- docs = {auto_open = false},
+        docs = {auto_open = false},
         entries = {name = 'custom', selection_order = 'near_cursor'}
       },
       completion = {
