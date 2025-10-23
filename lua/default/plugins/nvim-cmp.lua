@@ -44,7 +44,8 @@ return {
         max_view_entries = 10,
       },
       view = {
-        entries = {name = 'custom', selection_order = 'near_cursor' }
+        -- docs = {auto_open = false},
+        entries = {name = 'custom', selection_order = 'near_cursor'}
       },
       completion = {
         completeopt = 'noinsert,menuone,noselect',
@@ -96,6 +97,15 @@ return {
             fallback()
           end
         end, { 'i', 's' }),
+        ['<C-g>'] = function()
+          if cmp.visible_docs() then
+            cmp.close_docs()
+          else
+            cmp.open_docs()
+          end
+        end,
+        ['<C-k>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-j>'] = cmp.mapping.scroll_docs(4),
       },
       snippet = {
         expand = function(args)
