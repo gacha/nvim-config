@@ -55,7 +55,7 @@ return {
     vim.keymap.set('n', 'gr', fzf_lua.lsp_references, { silent = true, noremap = true })
     -- jump to first definition, without LSP uses ctags
     vim.keymap.set('n', '<C-]>', function()
-        if #vim.lsp.get_active_clients({ bufnr = 0 }) > 0 then
+        if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
           fzf_lua.lsp_definitions({ jump1 = true })
         else
           -- do the default action if no LSP clients attached
