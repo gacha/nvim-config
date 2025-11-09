@@ -135,3 +135,8 @@ vim.api.nvim_create_autocmd(
   { "BufRead", "BufNewFile", "FileType" },
   { pattern = { "*.txt", "*.md", "notes", "gitcommit" }, command = "setlocal spell" }
 )
+
+--
+-- Custom Commands
+--
+vim.cmd("command! SwapDiff w !diff % -")
