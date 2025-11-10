@@ -1,6 +1,6 @@
-local gemini_pro = {
-  name = "gemini",
-  model = "gemini-2.5-pro"
+local default_adapter = {
+  name = "copilot",
+  model = "gpt-5-codex"
 }
 
 return {
