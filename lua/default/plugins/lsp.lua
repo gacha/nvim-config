@@ -5,9 +5,6 @@ return {
     'neovim/nvim-lspconfig',
   },
   config = function ()
-    -- Global
-    vim.lsp.codelens = false
-
     -- Mason
     require('mason').setup()
     require('mason-lspconfig').setup {
@@ -19,10 +16,8 @@ return {
     -- LUA
     vim.lsp.config('lua_ls', {
       settings = {
-        lens = {
-          enable = false
-        },
         Lua = {
+          codeLens = { enable = false },
           diagnostics = {
             -- Get the language server to recognize the `vim` global
             globals = {'vim'},
