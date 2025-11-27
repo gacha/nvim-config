@@ -7,7 +7,7 @@ return {
       pattern = "qf",
       callback = function(event)
         local title = vim.fn.getqflist({ title = 0 }).title or ""
-        if not title:lower():find("GcLog", 1, true) then
+        if not title:lower():find("gclog", 1, true) then
           return
         end
         local opts = { buffer = event.buf, silent = true }
