@@ -5,6 +5,8 @@ return {
     'neovim/nvim-lspconfig',
   },
   config = function ()
+    vim.lsp.inlay_hint.enable(false)
+
     -- Mason
     require('mason').setup()
     require('mason-lspconfig').setup {
@@ -17,7 +19,6 @@ return {
     vim.lsp.config('lua_ls', {
       settings = {
         Lua = {
-          codeLens = { enable = false },
           diagnostics = {
             -- Get the language server to recognize the `vim` global
             globals = {'vim'},
