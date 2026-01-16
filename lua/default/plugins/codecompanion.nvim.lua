@@ -1,6 +1,6 @@
 local default_adapter = {
   name = "copilot",
-  model = "gpt-5-codex"
+  model = "claude-sonnet-4.5"
 }
 
 return {
@@ -10,7 +10,7 @@ return {
   },
   config = function ()
     require("codecompanion").setup({
-      strategies = {
+      interactions = {
         chat = {
           adapter = default_adapter,
           keymaps = {
@@ -29,6 +29,40 @@ return {
       },
       opts = {
         -- log_level = "DEBUG",
+      },
+      rules = {
+        default = {
+          description = "Collection of common files for all projects",
+          files = {
+            "AGENTS.md",
+            { path = "CLAUDE.md", parser = "claude" },
+          },
+          enabled = true,
+        },
+        opts = {
+          chat = {
+            autoload = "default",
+            enabled = true,
+          },
+        },
+      },
+      adapters = {
+        acp = {
+          gemini_cli = function()
+            return require("codecompanion.adapters").extend("gemini_cli", {
+              commands = {
+                default = {
+                  "gemini",
+                  "--experimental-acp",
+                },
+              },
+              defaults = {
+                auth_method = "gemini-api-key",
+                timeout = 20000
+              },
+            })
+          end,
+        },
       },
     })
 
