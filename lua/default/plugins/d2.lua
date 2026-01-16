@@ -1,8 +1,10 @@
+-- After setup run: :TSInstall d2
 return {
   "terrastruct/d2-vim",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     {
+       version = "*",
       "ravsii/tree-sitter-d2",
       build = "make nvim-install",
     },
