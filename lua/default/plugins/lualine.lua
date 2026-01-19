@@ -6,7 +6,7 @@ return {
     local code_companion = require("lualine.component"):extend()
 
     code_companion.processing = false
-    code_companion.model_name = "🤖 [Unknown]"
+    code_companion.ai_name = "🤖 [Unknown]"
     code_companion.spinner_index = 1
 
     local spinner_symbols = {
@@ -27,7 +27,7 @@ return {
       local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
 
       -- Request hook
-      vim.api.nvim_create_autocmd({ "User" }, {
+      vim.api.nvim_create_autocmd("User", {
         pattern = "CodeCompanionRequest*",
         group = group,
         callback = function(request)
@@ -39,12 +39,16 @@ return {
         end,
       })
 
-      -- AI model change hook
-      vim.api.nvim_create_autocmd({ "User" }, {
-        pattern = "CodeCompanionChatModel",
+      -- AI adapter/model change hook
+      vim.api.nvim_create_autocmd("User", {
+        pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel" },
         group = group,
         callback = function(event)
-          self.model_name = "🤖 [" .. event.data.model .. "]"
+          if event.data.model then
+            self.ai_name = "🤖 [" .. event.data.model .. "]"
+          elseif event.data.adapter then
+            self.ai_name = "🤖 [" .. event.data.adapter.name .. "]"
+          end
         end,
       })
     end
@@ -56,10 +60,10 @@ return {
 
       if self.processing then
         self.spinner_index = (self.spinner_index % #spinner_symbols) + 1
-        return spinner_symbols[self.spinner_index] .. " " .. self.model_name
+        return spinner_symbols[self.spinner_index] .. " " .. self.ai_name
       else
         if filetype == "codecompanion" then
-          return self.model_name
+          return self.ai_name
         else
           return nil
         end
