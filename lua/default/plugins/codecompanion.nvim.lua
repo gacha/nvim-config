@@ -35,6 +35,7 @@ return {
           description = "Collection of common files for all projects",
           files = {
             "AGENTS.md",
+            "*/AGENTS.md",
             { path = "CLAUDE.md", parser = "claude" },
           },
           enabled = true,
