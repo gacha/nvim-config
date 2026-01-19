@@ -6,6 +6,7 @@ return {
     local code_companion = require("lualine.component"):extend()
 
     code_companion.processing = false
+    code_companion.model_name = "🤖 [Unknown]"
     code_companion.spinner_index = 1
 
     local spinner_symbols = {
@@ -25,6 +26,7 @@ return {
 
       local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
 
+      -- Request hook
       vim.api.nvim_create_autocmd({ "User" }, {
         pattern = "CodeCompanionRequest*",
         group = group,
@@ -36,15 +38,31 @@ return {
           end
         end,
       })
+
+      -- AI model change hook
+      vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "CodeCompanionChatModel",
+        group = group,
+        callback = function(event)
+          self.model_name = "🤖 [" .. event.data.model .. "]"
+        end,
+      })
     end
 
     -- Function that runs every time statusline is updated
     function code_companion:update_status()
+      local bufnr = vim.api.nvim_get_current_buf()
+      local filetype = vim.bo[bufnr].filetype
+
       if self.processing then
         self.spinner_index = (self.spinner_index % #spinner_symbols) + 1
-        return "✨ " .. spinner_symbols[self.spinner_index]
+        return spinner_symbols[self.spinner_index] .. " " .. self.model_name
       else
-        return nil
+        if filetype == "codecompanion" then
+          return self.model_name
+        else
+          return nil
+        end
       end
     end
     -- end of CodeCompanion methods
