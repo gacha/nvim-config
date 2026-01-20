@@ -14,6 +14,10 @@ return {
         chat = {
           adapter = default_adapter,
           keymaps = {
+            close = {
+              modes = { n = "<Leader>q" },
+              opts = {},
+            },
             send = {
               modes = { n = "<Leader><CR>", i = "<C-s>" },
               opts = {},
