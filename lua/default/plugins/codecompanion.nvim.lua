@@ -10,6 +10,14 @@ return {
   },
   config = function ()
     require("codecompanion").setup({
+      prompt_library = {
+        markdown = {
+          dirs = {
+            vim.fn.getcwd() .. "/.prompts",
+            "~/.config/prompts",
+          },
+        },
+      },
       interactions = {
         chat = {
           adapter = default_adapter,
@@ -36,7 +44,7 @@ return {
       },
       rules = {
         default = {
-          description = "Collection of common files for all projects",
+          description = "Default rule",
           files = {
             "AGENTS.md",
             "*/AGENTS.md",
