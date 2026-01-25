@@ -1,1 +1,4 @@
-return {'github/copilot.vim'}
+return {
+  -- Uncomment to Setup GitHub Copilot
+  -- 'github/copilot.vim'
+}
