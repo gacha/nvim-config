@@ -53,53 +53,48 @@ if vim.env.VIM_CRONTAB == "true" then
 end
 
 -- Diagnostics
--- Fix a bug, after CmdlineLeave diagnostic config resets
-vim.api.nvim_create_autocmd({'VimEnter', 'CmdlineLeave'}, {
-  callback = function()
-    local signs = { Error = "󰅚", Warn = "󰀪", Hint = "", Info = " " }
-    vim.diagnostic.config {
-      virtual_text = {
-        severity = vim.diagnostic.severity.ERROR,
-      },
-      virtual_lines = false,
-      signs = {
-        text = {
-          [vim.diagnostic.severity.ERROR] = signs.Error,
-          [vim.diagnostic.severity.WARN] = signs.Warn,
-          [vim.diagnostic.severity.HINT] = signs.Hint,
-          [vim.diagnostic.severity.INFO] = signs.Info,
-        },
-        linehl = {
-          [vim.diagnostic.severity.ERROR] = "Error",
-          [vim.diagnostic.severity.WARN] = "Warn",
-          [vim.diagnostic.severity.HINT] = "Hint",
-          [vim.diagnostic.severity.INFO] = "Info",
-        },
-        active = {
-          { name = "DiagnosticSignError", text = signs.Error },
-          { name = "DiagnosticSignWarn",  text = signs.Warn },
-          { name = "DiagnosticSignHint",  text = signs.Hint },
-          { name = "DiagnosticSignInfo",  text = signs.Info },
-        },
-      },
-      update_in_insert = false,
-      underline = false,
-      severity_sort = true,
-      float = {
-        focusable = false,
-        source = "if_many",
-        border = "solid",
-        header = "",
-        prefix = "",
-        suffix  = "",
-        format = function(diagnostic)
-          -- remove unwanted text from rubocop
-          return string.gsub(diagnostic.message, "This offense is not autocorrectable.", "")
-        end
-      },
-    }
-  end
-})
+local signs = { Error = "󰅚", Warn = "󰀪", Hint = "", Info = " " }
+vim.diagnostic.config {
+  virtual_text = {
+    severity = vim.diagnostic.severity.ERROR,
+  },
+  virtual_lines = false,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = signs.Error,
+      [vim.diagnostic.severity.WARN] = signs.Warn,
+      [vim.diagnostic.severity.HINT] = signs.Hint,
+      [vim.diagnostic.severity.INFO] = signs.Info,
+    },
+    linehl = {
+      [vim.diagnostic.severity.ERROR] = "Error",
+      [vim.diagnostic.severity.WARN] = "Warn",
+      [vim.diagnostic.severity.HINT] = "Hint",
+      [vim.diagnostic.severity.INFO] = "Info",
+    },
+    active = {
+      { name = "DiagnosticSignError", text = signs.Error },
+      { name = "DiagnosticSignWarn",  text = signs.Warn },
+      { name = "DiagnosticSignHint",  text = signs.Hint },
+      { name = "DiagnosticSignInfo",  text = signs.Info },
+    },
+  },
+  update_in_insert = false,
+  underline = false,
+  severity_sort = true,
+  float = {
+    focusable = false,
+    source = "if_many",
+    border = "solid",
+    header = "",
+    prefix = "",
+    suffix  = "",
+    format = function(diagnostic)
+      -- remove unwanted text from rubocop
+      return string.gsub(diagnostic.message, "This offense is not autocorrectable.", "")
+    end
+  },
+}
 
 --
 -- AutoCommands
