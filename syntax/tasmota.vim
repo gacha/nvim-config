@@ -109,7 +109,7 @@ hi tsmMathsOperator term=bold cterm=bold gui=bold
 syn keyword tsmTodo TODO FIXME XXX NOTE contained
 syn match tsmComment "^;.*$" contains=tsmTodo
 syn match tsmComment "^;.*$" contains=tsmTodo
-syn match tsmComment "^\/\/.*"
+syn match tsmComment "\/\/.*"
 
 " Postscript {{{1
 let b:current_syntax = 'tasmota'
