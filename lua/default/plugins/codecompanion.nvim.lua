@@ -47,15 +47,6 @@ return {
         -- log_level = "DEBUG",
       },
       rules = {
-        default = {
-          description = "Default rule",
-          files = {
-            "AGENTS.md",
-            "*/AGENTS.md",
-            { path = "CLAUDE.md", parser = "claude" },
-          },
-          enabled = true,
-        },
         opts = {
           chat = {
             autoload = "default",
