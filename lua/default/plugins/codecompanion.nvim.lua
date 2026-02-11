@@ -7,6 +7,7 @@ return {
   'olimorris/codecompanion.nvim',
   dependencies = {
     'nvim-lua/plenary.nvim',
+    'ravitemer/codecompanion-history.nvim'
   },
   config = function ()
     require("codecompanion").setup({
@@ -95,6 +96,9 @@ return {
             -- MCP Prompts
             make_slash_commands = true,      -- Add MCP prompts as /slash commands
           }
+        },
+        history = {
+          enabled = true,
         }
       }
     })
