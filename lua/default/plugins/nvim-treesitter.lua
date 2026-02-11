@@ -2,11 +2,10 @@ return {
   'nvim-treesitter/nvim-treesitter',
   dependencies = {
     'RRethy/nvim-treesitter-endwise',
-    'nvim-treesitter/nvim-treesitter-textobjects',
   },
   config = function()
     require('nvim-treesitter.configs').setup({
-      ensure_installed = { 'html', 'ruby', 'javascript', 'go', 'c', 'lua', 'vim', 'vimdoc', 'bash', 'yaml'},
+      ensure_installed = { 'html', 'ruby', 'javascript', 'go', 'c', 'lua', 'vim', 'vimdoc', 'bash', 'yaml', 'diff'},
       highlight = {
         enable = true,
         disable = {'terraform', 'coffee'},
