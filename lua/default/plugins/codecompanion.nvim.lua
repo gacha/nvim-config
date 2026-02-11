@@ -64,6 +64,24 @@ return {
         },
       },
       adapters = {
+        http = {
+          opts = {
+            show_presets = false,
+            show_model_choices = true,
+          },
+
+          copilot = "copilot",
+          ollama = "ollama",
+          lmstudio = function()
+            return require("codecompanion.adapters").extend("openai_compatible", {
+              name = "lmstudio",
+              env = {
+                url = "http://localhost:1234",
+                -- api_key = "lmstudio",
+              },
+            })
+          end,
+        },
         acp = {
           gemini_cli = function()
             return require("codecompanion.adapters").extend("gemini_cli", {
