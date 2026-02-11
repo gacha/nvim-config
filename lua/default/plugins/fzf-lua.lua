@@ -12,6 +12,11 @@ return {
           layout = 'vertical',
         }
       },
+      keymap = {
+        fzf = {
+          ["ctrl-f"] = "select-all+accept",
+        },
+      },
       grep = {
         rg_glob = true,
         -- PATCH: allow to search with glob in particular path, like: FIXME -- *.rb ./some_dir
