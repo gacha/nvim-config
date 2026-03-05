@@ -44,7 +44,11 @@ return {
         },
       },
       opts = {
-        -- log_level = "DEBUG",
+        per_project_config = {
+          files = {
+            ".codecompanion.lua",
+          },
+        },
       },
       rules = {
         opts = {
@@ -116,7 +120,7 @@ return {
     vim.cmd([[cab cc CodeCompanion]])
 
     -- Mapping
-    vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-    vim.keymap.set('n', '<leader>a', '<cmd>CodeCompanionChat Toggle<cr>')
+    vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { desc = "Add visual selection to the current AI chat buffer", noremap = true, silent = true })
+    vim.keymap.set('n', '<leader>a', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "Toggle AI chat buffer" })
   end
 }
