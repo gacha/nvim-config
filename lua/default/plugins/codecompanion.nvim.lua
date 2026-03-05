@@ -112,8 +112,11 @@ return {
         },
         history = {
           enabled = true,
+          opts = {
+            auto_generate_title = false,
+          },
         }
-      }
+      },
     })
 
     -- Expand 'cc' into 'CodeCompanion' in the command line
