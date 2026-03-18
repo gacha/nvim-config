@@ -44,10 +44,10 @@ return {
         pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel" },
         group = group,
         callback = function(event)
-          if event.data.model then
-            self.ai_name = "🤖 [" .. event.data.model .. "]"
+          if event.data.model and event.data.adapter then
+            self.ai_name = "🤖 " .. event.data.adapter.name .. "@" .. event.data.model
           elseif event.data.adapter then
-            self.ai_name = "🤖 [" .. event.data.adapter.name .. "]"
+            self.ai_name = "🤖 " .. event.data.adapter.name
           end
         end,
       })
@@ -69,6 +69,12 @@ return {
         end
       end
     end
+
+    function hide_from_code_companion()
+      local buf_id = vim.api.nvim_get_current_buf()
+      local buf_file_type = vim.api.nvim_buf_get_option(buf_id, 'filetype')
+      return buf_file_type ~= 'codecompanion'
+    end
     -- end of CodeCompanion methods
 
     require('lualine').setup {
@@ -79,9 +85,20 @@ return {
         lualine_c = {
           {
             'filename',
-            path = 1,
+            path = 0
           },
           code_companion,
+        },
+        lualine_x = {
+          'encoding',
+          {
+            'fileformat',
+            cond = hide_from_code_companion,
+          },
+          {
+            'filetype',
+            cond = hide_from_code_companion,
+          },
         },
       },
       inactive_sections = {
