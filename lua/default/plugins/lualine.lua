@@ -85,7 +85,7 @@ return {
         lualine_c = {
           {
             'filename',
-            path = 0
+            path = 1
           },
           code_companion,
         },
@@ -105,7 +105,7 @@ return {
         lualine_c = {
           {
             'filename',
-            path = 1,
+            path = 0,
           },
         }
       },
