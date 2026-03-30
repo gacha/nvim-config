@@ -1,6 +1,6 @@
 About
 ------------
-Neovim config used by me as a ruby developer.
+Neovim 0.12+ config used by me as a ruby developer.
 
 Features
 ------------

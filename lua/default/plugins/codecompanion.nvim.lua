@@ -88,6 +88,7 @@ return {
               },
               defaults = {
                 auth_method = "gemini-api-key",
+                model = "auto-gemini-3",
                 timeout = 20000
               },
             })
