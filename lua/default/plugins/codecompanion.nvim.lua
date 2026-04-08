@@ -36,6 +36,29 @@ return {
             },
           },
         },
+        cli = {
+          agent = "copilot",
+          agents = {
+            copilot = {
+              cmd = "copilot",
+              args = {},
+              description = "Copilot CLI",
+              provider = "terminal",
+            },
+            gemini = {
+              cmd = "gemini",
+              args = {},
+              description = "Gemini CLI",
+              provider = "terminal",
+            },
+            claude_code = {
+              cmd = "claude",
+              args = {},
+              description = "Claude Code CLI",
+              provider = "terminal",
+            },
+          },
+        },
         inline = {
           adapter = default_adapter,
         },
