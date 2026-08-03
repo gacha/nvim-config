@@ -1,6 +1,6 @@
 local default_adapter = {
   name = "copilot",
-  model = "claude-haiku-4.5"
+  model = "claude-opus-4.8"
 }
 
 return {
