@@ -9,7 +9,8 @@ return {
     local code_companion = require("lualine.component"):extend()
 
     code_companion.processing = false
-    code_companion.ai_name = "🤖 [Unknown]"
+    code_companion.adapter_name = nil
+    code_companion.model_name = nil
     code_companion.spinner_index = 1
 
     local spinner_symbols = {
@@ -31,12 +32,13 @@ return {
 
       -- Request hook
       vim.api.nvim_create_autocmd("User", {
-        pattern = "CodeCompanionRequest*",
+        pattern = { "CodeCompanionChat*", "CodeCompanionACPSession*", "CodeCompanionMCPServer*" },
         group = group,
         callback = function(request)
-          if request.match == "CodeCompanionRequestStarted" then
+          -- vim.notify("CC event.match: " .. request.match, vim.log.levels.INFO)
+          if vim.tbl_contains({"CodeCompanionChatCreated", "CodeCompanionACPSessionPre", "CodeCompanionMCPServerStart", "CodeCompanionChatSubmitted", "CodeCompanionChatCompacting"}, request.match) then
             self.processing = true
-          elseif request.match == "CodeCompanionRequestFinished" then
+          elseif vim.tbl_contains({"CodeCompanionACPSessionPost", "CodeCompanionMCPServerReady", "CodeCompanionChatDone", "CodeCompanionChatStopped", "CodeCompanionChatCleared"}, request.match) then
             self.processing = false
           end
         end,
@@ -44,33 +46,42 @@ return {
 
       -- AI adapter/model change hook
       vim.api.nvim_create_autocmd("User", {
-        pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel" },
+        pattern = { "CodeCompanionChatAdapter", "CodeCompanionChatModel", "CodeCompanionACPSessionPost" },
         group = group,
         callback = function(event)
           -- vim.notify("CC event.match: " .. event.match, vim.log.levels.INFO)
           -- vim.notify("CC event.data: " .. vim.inspect(event.data), vim.log.levels.INFO)
-          local agent_name, model_name
 
           if event.data.adapter then
             if event.data.adapter.formatted_name then
-              agent_name = event.data.adapter.formatted_name
+              self.adapter_name = event.data.adapter.formatted_name
             elseif event.data.adapter.name then
-              agent_name = event.data.adapter.name
+              self.adapter_name = event.data.adapter.name
             end
             if event.data.adapter.model and event.data.adapter.model.name then
-              model_name = event.data.adapter.model.name
-            end
-          end
-
-          if agent_name then
-            if model_name then
-              self.ai_name = "🤖 " .. agent_name .. "@" .. model_name
-            else
-              self.ai_name = "🤖 " .. agent_name
+              self.model_name = event.data.adapter.model.name
+            elseif event.data.model then
+              self.model_name = event.data.model
             end
           end
         end,
       })
+    end
+
+    function code_companion:get_status()
+      local status = "🤖 "
+      if self.processing then
+        self.spinner_index = (self.spinner_index % #spinner_symbols) + 1
+        status = spinner_symbols[self.spinner_index] .. " " .. status
+      end
+      if self.adapter_name then
+        if self.model_name then
+          return status .. self.adapter_name .. "@" .. self.model_name
+        end
+        return status .. self.adapter_name
+      else
+        return status
+      end
     end
 
     -- Function that runs every time statusline is updated
@@ -78,15 +89,10 @@ return {
       local bufnr = vim.api.nvim_get_current_buf()
       local filetype = vim.bo[bufnr].filetype
 
-      if self.processing then
-        self.spinner_index = (self.spinner_index % #spinner_symbols) + 1
-        return spinner_symbols[self.spinner_index] .. " " .. self.ai_name
+      if filetype == "codecompanion" then
+        return self.get_status(self)
       else
-        if filetype == "codecompanion" then
-          return self.ai_name
-        else
-          return nil
-        end
+        return nil
       end
     end
 
