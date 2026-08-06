@@ -76,7 +76,7 @@ return {
       end
       if self.adapter_name then
         if self.model_name then
-          return status .. self.adapter_name .. "@" .. self.model_name
+          return status .. self.adapter_name .. " → " .. self.model_name
         end
         return status .. self.adapter_name
       else
