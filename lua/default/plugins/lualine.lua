@@ -9,6 +9,7 @@ return {
     local code_companion = require("lualine.component"):extend()
 
     code_companion.processing = false
+    code_companion.adapter_type = ""
     code_companion.adapter_name = nil
     code_companion.model_name = nil
     code_companion.spinner_index = 1
@@ -32,13 +33,17 @@ return {
 
       -- Request hook
       vim.api.nvim_create_autocmd("User", {
-        pattern = { "CodeCompanionChat*", "CodeCompanionACPSession*", "CodeCompanionMCPServer*" },
+        pattern = { "CodeCompanionChat*", "CodeCompanionACPSession*" },
         group = group,
         callback = function(request)
-          -- vim.notify("CC event.match: " .. request.match, vim.log.levels.INFO)
-          if vim.tbl_contains({"CodeCompanionChatCreated", "CodeCompanionACPSessionPre", "CodeCompanionMCPServerStart", "CodeCompanionChatSubmitted", "CodeCompanionChatCompacting"}, request.match) then
-            self.processing = true
-          elseif vim.tbl_contains({"CodeCompanionACPSessionPost", "CodeCompanionMCPServerReady", "CodeCompanionChatDone", "CodeCompanionChatStopped", "CodeCompanionChatCleared"}, request.match) then
+          -- vim.notify("CC event.match: " .. vim.inspect(request), vim.log.levels.INFO)
+          if vim.tbl_contains({"CodeCompanionChatOpened", "CodeCompanionChatSubmitted", "CodeCompanionChatCompacting"}, request.match) then
+            if request.match ~= "CodeCompanionChatOpened" then
+              self.processing = true
+            elseif self.adapter_type == "acp" then
+              self.processing = true
+            end
+          elseif vim.tbl_contains({"CodeCompanionACPSessionPost", "CodeCompanionChatDone", "CodeCompanionChatStopped", "CodeCompanionChatCleared"}, request.match) then
             self.processing = false
           end
         end,
@@ -52,17 +57,11 @@ return {
           -- vim.notify("CC event.match: " .. event.match, vim.log.levels.INFO)
           -- vim.notify("CC event.data: " .. vim.inspect(event.data), vim.log.levels.INFO)
 
-          if event.data.adapter then
-            if event.data.adapter.formatted_name then
-              self.adapter_name = event.data.adapter.formatted_name
-            elseif event.data.adapter.name then
-              self.adapter_name = event.data.adapter.name
-            end
-            if event.data.adapter.model and event.data.adapter.model.name then
-              self.model_name = event.data.adapter.model.name
-            elseif event.data.model then
-              self.model_name = event.data.model
-            end
+          local adapter = event.data.adapter
+          if adapter then
+            self.adapter_type = adapter.type or self.adapter_type
+            self.adapter_name = adapter.formatted_name or adapter.name or self.adapter_name
+            self.model_name = (adapter.model and adapter.model.name) or event.data.model or self.model_name
           end
         end,
       })
