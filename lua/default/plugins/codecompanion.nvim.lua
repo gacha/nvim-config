@@ -24,6 +24,14 @@ return {
           adapter = default_adapter,
           opts = {
             completion_provider = "cmp",
+            system_prompt = function(ctx)
+              return ctx.default_system_prompt .. [[
+
+Additional context:
+- Your output is rendered in a Neovim split that is 100 characters wide.
+- Keep lines and tables under 100 characters; never rely on horizontal scrolling.
+- If table data would exceed that width, use lists instead.]]
+            end,
           },
           keymaps = {
             close = {
