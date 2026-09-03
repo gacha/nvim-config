@@ -9,7 +9,6 @@ return {
     local code_companion = require("lualine.component"):extend()
 
     code_companion.processing = false
-    code_companion.adapter_type = ""
     code_companion.adapter_name = nil
     code_companion.model_name = nil
     code_companion.spinner_index = 1
@@ -25,25 +24,65 @@ return {
       "⣷"
     }
 
+    -- Try to seed the adapter/model name from CodeCompanion's config so the
+    -- statusline shows something before any CodeCompanion event fires.
+    local function default_adapter_info()
+      local ok, cc = pcall(require, "codecompanion.config")
+      if not ok then
+        return nil
+      end
+      local cfg = cc.config or cc
+      local strategies = cfg.strategies or cfg.interactions
+      local chat = strategies and strategies.chat
+      local adapter = chat and chat.adapter
+      if type(adapter) == "table" then
+        return adapter.name, adapter.model
+      elseif type(adapter) == "string" then
+        return adapter, nil
+      end
+      return nil
+    end
+
     -- Initializer
     function code_companion:init(options)
       code_companion.super.init(self, options)
 
-      local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
+      local a_name, a_model = default_adapter_info()
+      self.adapter_name = self.adapter_name or a_name
+      self.model_name = self.model_name or a_model
 
-      -- Request hook
+      local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
+      local busy_events = {
+        CodeCompanionACPSessionPre = true,
+        CodeCompanionChatSubmitted = true,
+        CodeCompanionChatCompacting = true,
+        CodeCompanionRequestStarted = true,
+      }
+      local idle_events = {
+        CodeCompanionACPSessionPost = true,
+        CodeCompanionRequestFinished = true,
+        CodeCompanionChatDone = true,
+        CodeCompanionChatStopped = true,
+        CodeCompanionChatCleared = true,
+      }
+
       vim.api.nvim_create_autocmd("User", {
-        pattern = { "CodeCompanionChat*", "CodeCompanionACPSession*" },
+        pattern = "CodeCompanion*",
         group = group,
         callback = function(request)
-          -- vim.notify("CC event.match: " .. vim.inspect(request), vim.log.levels.INFO)
-          if vim.tbl_contains({"CodeCompanionChatOpened", "CodeCompanionChatSubmitted", "CodeCompanionChatCompacting"}, request.match) then
-            if request.match ~= "CodeCompanionChatOpened" then
-              self.processing = true
-            elseif self.adapter_type == "acp" then
-              self.processing = true
+          if busy_events[request.match] then
+            self.processing = true
+            if request.match == "CodeCompanionACPSessionPre" then
+              self._connect_token = (self._connect_token or 0) + 1
+              local token = self._connect_token
+              vim.defer_fn(function()
+                if self._connect_token == token then
+                  self.processing = false
+                end
+              end, 30000)
             end
-          elseif vim.tbl_contains({"CodeCompanionACPSessionPost", "CodeCompanionChatDone", "CodeCompanionChatStopped", "CodeCompanionChatCleared"}, request.match) then
+          elseif idle_events[request.match] then
+            self._connect_token = (self._connect_token or 0) + 1 -- cancel any pending connect timeout
             self.processing = false
           end
         end,
@@ -59,7 +98,6 @@ return {
 
           local adapter = event.data.adapter
           if adapter then
-            self.adapter_type = adapter.type or self.adapter_type
             self.adapter_name = adapter.formatted_name or adapter.name or self.adapter_name
             self.model_name = (adapter.model and adapter.model.name) or event.data.model or self.model_name
           end
