@@ -11,6 +11,17 @@ return {
   },
   config = function ()
     require("codecompanion").setup({
+      display = {
+        chat = {
+          window = {
+            -- 0 means auto
+            width = 0,
+            height = 0,
+            -- This fixes issue with auto-width (open CC Chat as third split)
+            full_height = false,
+          },
+        },
+      },
       prompt_library = {
         markdown = {
           dirs = {
@@ -134,6 +145,22 @@ Additional context:
           },
         }
       },
+    })
+
+    -- Save the windows dimensions
+    local cc_win = require("codecompanion.config").display.chat.window
+    vim.api.nvim_create_autocmd("WinResized", {
+      callback = function()
+        for _, winid in ipairs(vim.v.event.windows or {}) do
+          if vim.api.nvim_win_is_valid(winid) then
+            local buf = vim.api.nvim_win_get_buf(winid)
+            if vim.bo[buf].filetype == "codecompanion" then
+              cc_win.width = vim.api.nvim_win_get_width(winid)
+              cc_win.height = vim.api.nvim_win_get_height(winid)
+            end
+          end
+        end
+      end,
     })
 
     -- Expand 'cc' into 'CodeCompanion' in the command line
