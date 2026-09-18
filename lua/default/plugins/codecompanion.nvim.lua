@@ -154,8 +154,14 @@ return {
           if vim.api.nvim_win_is_valid(winid) then
             local buf = vim.api.nvim_win_get_buf(winid)
             if vim.bo[buf].filetype == "codecompanion" then
-              cc_win.width = vim.api.nvim_win_get_width(winid)
-              cc_win.height = vim.api.nvim_win_get_height(winid)
+              local win_width = vim.api.nvim_win_get_width(winid)
+              local win_height = vim.api.nvim_win_get_height(winid)
+              -- A horizontal split spans (almost) the full editor width
+              if win_width >= vim.o.columns then
+                cc_win.height = win_height
+              else
+                cc_win.width = win_width
+              end
             end
           end
         end
