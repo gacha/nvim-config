@@ -54,10 +54,19 @@ return {
         return nil
       end
 
+      local thinking_count = 0
+      for _ in pairs(buf_processing) do
+        thinking_count = thinking_count + 1
+      end
+
       local status = "🤖 "
-      if buf_processing[bufnr] then
+      if thinking_count > 0 then
         spinner_index = (spinner_index % #spinner_symbols) + 1
-        status = spinner_symbols[spinner_index] .. " " .. status
+        if thinking_count > 1 then
+          status = "(" .. thinking_count .. ") " .. spinner_symbols[spinner_index] .. " " .. status
+        else
+          status = spinner_symbols[spinner_index] .. " " .. status
+        end
       end
 
       local meta = _G.codecompanion_chat_metadata and _G.codecompanion_chat_metadata[bufnr]
