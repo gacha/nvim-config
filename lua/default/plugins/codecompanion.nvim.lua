@@ -166,6 +166,53 @@ return {
 
     -- Mapping
     vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { desc = "Add visual selection to the current AI chat buffer", noremap = true, silent = true })
-    vim.keymap.set('n', '<leader>a', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "Toggle AI chat buffer" })
+    local function smart_toggle_ai_chat()
+      -- If chat is the only window, just open a clean buffer (can't close last window)
+      if vim.bo.filetype == "codecompanion" and #vim.api.nvim_list_wins() == 1 then
+        vim.cmd("enew")
+        return
+      end
+
+      -- Check if the only open buffer is an empty unnamed one (fresh nvim start)
+      local only_empty_buffer = (function()
+        local listed = {}
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+            listed[#listed + 1] = buf
+          end
+        end
+        if #listed == 1 then
+          local buf = listed[1]
+          return vim.api.nvim_buf_get_name(buf) == "" and not vim.bo[buf].modified
+        end
+        return false
+      end)()
+
+      local function open_and_replace_window()
+        local orig_win = vim.api.nvim_get_current_win()
+        local orig_buf = vim.api.nvim_get_current_buf()
+        vim.cmd("CodeCompanionChat Toggle")
+        vim.schedule(function()
+          if vim.api.nvim_win_is_valid(orig_win) and vim.api.nvim_get_current_win() ~= orig_win then
+            vim.api.nvim_win_close(orig_win, false)
+          end
+          if vim.api.nvim_buf_is_valid(orig_buf) and vim.api.nvim_buf_get_name(orig_buf) == "" and not vim.bo[orig_buf].modified then
+            vim.api.nvim_buf_delete(orig_buf, { force = false })
+          end
+        end)
+      end
+
+      if only_empty_buffer then
+        open_and_replace_window()
+      elseif vim.o.columns < 160 then
+        -- Small window: open in a new tab, then remove the empty buffer tabnew created
+        vim.cmd("tabnew")
+        open_and_replace_window()
+      else
+        vim.cmd("CodeCompanionChat Toggle")
+      end
+    end
+
+    vim.keymap.set('n', '<leader>a', smart_toggle_ai_chat, { desc = "Toggle AI chat buffer" })
   end
 }
