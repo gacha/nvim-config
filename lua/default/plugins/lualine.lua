@@ -73,6 +73,29 @@ return {
       if meta and meta.adapter then
         local name = meta.adapter.name or ""
         local model = meta.adapter.model or ""
+
+        -- For ACP adapters, resolve the friendly model name from the connection
+        if meta.adapter.type == "acp" and model ~= "" then
+          local ok, cc = pcall(require, "codecompanion")
+          if ok then
+            local chat = cc.buf_get_chat(bufnr)
+            if chat and chat.acp_connection then
+              local ACP = require("codecompanion.acp")
+              for _, opt in ipairs(chat.acp_connection:get_config_options()) do
+                if (opt.category or opt.id) == "model" and opt.type == "select" and opt.currentValue then
+                  for _, val in ipairs(ACP.flatten_config_options(opt.options or {})) do
+                    if val.value == opt.currentValue and val.name then
+                      model = val.name
+                      break
+                    end
+                  end
+                  break
+                end
+              end
+            end
+          end
+        end
+
         if model ~= "" then
           return status .. name .. " → " .. model
         elseif name ~= "" then
