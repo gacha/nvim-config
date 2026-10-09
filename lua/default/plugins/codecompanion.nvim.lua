@@ -76,6 +76,30 @@ return {
         cmd = {
           adapter = default_adapter,
         },
+        background = {
+          adapter = {
+            name = "copilot",
+            model = "claude-haiku-5.5",
+          },
+          chat = {
+            -- Enable this if the history extension is disabled. Now, the title is generated
+            -- by the history extension.
+            --
+            -- callbacks = {
+            --   ["on_ready"] = {
+            --     actions = {
+            --       "interactions.background.builtin.chat_make_title",
+            --     },
+            --     -- Enable "on_ready" callback which contains the title generation action
+            --     enabled = true,
+            --   },
+            -- },
+            opts = {
+              -- Enable background interactions generally
+              enabled = true,
+            },
+          },
+        },
       },
       opts = {
         per_project_config = {
@@ -133,7 +157,11 @@ return {
         history = {
           enabled = true,
           opts = {
-            auto_generate_title = false,
+            auto_generate_title = true,
+            title_generation_opts = {
+              adapter = "copilot",
+              model = "claude-haiku-5.5",
+            }
           },
         }
       },

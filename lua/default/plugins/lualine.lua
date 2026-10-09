@@ -44,6 +44,11 @@ return {
           elseif event.match == "CodeCompanionChatClosed" then
             buf_processing[bufnr] = nil
           end
+
+          local ok_lualine, lualine = pcall(require, "lualine")
+          if ok_lualine then
+            lualine.refresh({ place = { "statusline" } })
+          end
         end,
       })
     end
@@ -110,11 +115,59 @@ return {
       return vim.bo[vim.api.nvim_get_current_buf()].filetype ~= "codecompanion"
     end
 
+    local function show_only_code_companion()
+      return vim.bo[vim.api.nvim_get_current_buf()].filetype == "codecompanion"
+    end
+
+    local function code_companion_title()
+      local bufnr = vim.api.nvim_get_current_buf()
+      if vim.bo[bufnr].filetype ~= "codecompanion" then
+        return nil
+      end
+
+      local ok, cc = pcall(require, "codecompanion")
+      if ok then
+        local chat = cc.buf_get_chat(bufnr)
+        local title = chat and (chat.title or (chat.opts and chat.opts.title) or (chat.ui and chat.ui.title))
+        if title and title ~= "" then
+          if vim.api.nvim_strwidth(title) > 60 then
+            return vim.fn.strcharpart(title, 0, 60) .. "…"
+          end
+          return title
+        end
+      end
+
+      local name = vim.api.nvim_buf_get_name(bufnr)
+      if name == "" then
+        return nil
+      end
+
+      local title = vim.fn.fnamemodify(name, ":t")
+      title = title:gsub("^✨%s*", "")
+      if vim.api.nvim_strwidth(title) > 60 then
+        title = vim.fn.strcharpart(title, 0, 60) .. "…"
+      end
+      return title
+    end
+
     require('lualine').setup {
       options = { theme = 'gruvbox' },
       sections = {
         lualine_a = {},
-        lualine_b = {'branch', 'diff', 'diagnostics'},
+        lualine_b = {
+          {
+            'branch',
+            cond = hide_from_code_companion,
+          },
+          {
+            'diff',
+            cond = hide_from_code_companion,
+          },
+          {
+            'diagnostics',
+            cond = hide_from_code_companion,
+          },
+        },
         lualine_c = {
           {
             'filename',
@@ -132,6 +185,12 @@ return {
           {
             'filetype',
             cond = hide_from_code_companion,
+          },
+        },
+        lualine_z = {
+          {
+            code_companion_title,
+            cond = show_only_code_companion,
           },
         },
       },
