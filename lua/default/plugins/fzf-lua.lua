@@ -52,6 +52,7 @@ return {
     vim.keymap.set('n', '<C-e>', fzf_lua.buffers, { silent = true })
     vim.keymap.set('n', '<C-q>', function() fzf_lua.fill_quickfix() end, { silent = true })
     vim.keymap.set('n', '<C-t>', fzf_lua.tabs, { silent = true })
+    vim.keymap.set('n', '<leader>gw', fzf_lua.git_worktrees, { silent = true, desc = 'Switch worktree' })
     vim.keymap.set('n', '<leader>t', function() fzf_lua.btags({ ctags_autogen = false }) end, { silent = true })
     vim.keymap.set('n', '<leader>f', fzf_lua.lsp_document_symbols, { silent = true })
     vim.keymap.set('n', '<leader>.', fzf_lua.tags, { silent = true })

@@ -101,6 +101,24 @@ vim.diagnostic.config {
 -- AutoCommands
 --
 
+-- Rename tmux window to the new directory basename whenever cwd changes globally
+vim.api.nvim_create_autocmd('DirChanged', {
+  pattern = 'global',
+  callback = function()
+    if not vim.env.TMUX or not vim.env.TMUX_PANE or vim.fn.executable('tmux') ~= 1 then return end
+    vim.system({
+      'tmux', 'rename-window', '-t', vim.env.TMUX_PANE,
+      vim.fn.fnamemodify(vim.fn.getcwd(), ':t'),
+    }, { text = true }, function(result)
+      if result.code ~= 0 then
+        vim.schedule(function()
+          vim.notify('Unable to rename tmux window: ' .. (result.stderr or ''), vim.log.levels.WARN)
+        end)
+      end
+    end)
+  end,
+})
+
 -- Go to the last location
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
