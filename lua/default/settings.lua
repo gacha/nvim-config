@@ -21,6 +21,7 @@ vim.opt.spellsuggest = 'best,10'
 vim.opt.termguicolors = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.timeoutlen = 600
 -- vim.opt.winborder = 'solid' -- for all windows
 -- TODO: Enable this later
 -- vim.opt.pumborder = 'none' -- for popup menus
