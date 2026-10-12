@@ -161,6 +161,7 @@ return {
             title_generation_opts = {
               adapter = "copilot",
               model = "claude-haiku-5.5",
+              refresh_every_n_prompts = 3
             }
           },
         }
